@@ -1,0 +1,272 @@
+/* Paleta: azul claro, cinza, branco, verde suave */
+:root {
+  --primary-bg: #f6fbff;
+  --secondary-bg: #e3eaf2;
+  --card-bg: #ffffffcc;
+  --accent: #6ec1e4;
+  --accent-dark: #3a8bb7;
+  --success: #7ed957;
+  --danger: #ff6b6b;
+  --text-main: #222;
+  --text-light: #fff;
+  --shadow: 0 4px 24px #0001;
+  --border-radius: 16px;
+  --transition: 0.25s cubic-bezier(.4,2,.6,1);
+}
+
+body {
+  background: var(--primary-bg);
+  color: var(--text-main);
+  font-family: 'Nunito', 'Inter', Arial, sans-serif;
+  text-align: center;
+  margin: 0;
+  padding-bottom: 72px;
+  min-height: 100vh;
+  transition: background var(--transition);
+}
+
+#game-area {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 40px;
+  margin-top: 30px;
+  width: 100%;
+  transition: gap var(--transition);
+}
+
+#timers {
+  margin-bottom: 16px;
+  text-align: center;
+  font-size: 1.1em;
+  font-weight: bold;
+  background: var(--secondary-bg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  padding: 10px 0;
+  margin-top: 0;
+}
+
+#chessboard {
+  margin: 0 auto;
+  width: min(90vw, 90vh);
+  max-width: 600px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  background: var(--card-bg);
+  transition: box-shadow var(--transition);
+}
+
+#status {
+  margin: 20px;
+  font-size: 1.2em;
+  color: var(--accent-dark);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+button, input[type="text"] {
+  padding: 12px 18px;
+  font-size: 1.1em;
+  border-radius: 8px;
+  margin: 4px 0;
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+  background: var(--accent);
+  color: var(--text-light);
+  box-shadow: 0 2px 8px #0001;
+  transition: background var(--transition), box-shadow var(--transition), transform var(--transition);
+  cursor: pointer;
+}
+button:hover, input[type="text"]:focus {
+  background: var(--accent-dark);
+  box-shadow: 0 4px 16px #0002;
+  transform: translateY(-2px) scale(1.03);
+}
+button:active {
+  background: var(--accent-dark);
+  transform: scale(0.98);
+}
+#resignBtn {
+  background: var(--danger);
+  color: var(--text-light);
+}
+#resignBtn:hover {
+  background: #c0392b;
+}
+#private-room-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+}
+#private-room-controls input {
+  min-width: 110px;
+  background: var(--secondary-bg);
+  color: var(--text-main);
+  border: 1px solid #b0c4d4;
+}
+#roomCodeDisplay {
+  color: var(--success);
+  font-weight: bold;
+  font-size: 1.1em;
+}
+#history, #stats, #chat {
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 18px;
+  padding: 18px 12px 12px 12px;
+  text-align: left;
+  transition: box-shadow var(--transition);
+}
+#history h3, #stats h3, #chat h3 {
+  margin-top: 0;
+  color: var(--accent-dark);
+  font-size: 1.1em;
+}
+#move-list {
+  padding-left: 18px;
+  font-size: 1.05em;
+  max-height: 120px;
+  overflow-y: auto;
+}
+#chat {
+  margin-top: 30px;
+  background: var(--secondary-bg);
+  padding: 12px 8px 8px 8px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+}
+#chat-messages {
+  height: 120px;
+  overflow-y: auto;
+  background: #eaf6fa;
+  padding: 6px 4px 6px 8px;
+  border-radius: 8px;
+  font-size: 1em;
+  margin-bottom: 8px;
+  color: var(--text-main);
+}
+#chat-form {
+  display: flex;
+  gap: 6px;
+}
+#chat-input {
+  flex: 1;
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1px solid #b0c4d4;
+  background: #f6fbff;
+  color: var(--text-main);
+}
+#chat-form button {
+  background: var(--accent);
+  color: var(--text-light);
+  border: none;
+  padding: 4px 12px;
+  border-radius: 8px;
+}
+#victory-overlay, #exportModal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.85);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  animation: fadeIn 0.7s;
+}
+#victory-overlay img {
+  width: 220px;
+  max-width: 80vw;
+  animation: bounce 1.2s infinite alternate;
+}
+#victory-overlay div {
+  color: #fff;
+  font-size: 2.2em;
+  font-weight: bold;
+  margin-top: 30px;
+  text-shadow: 2px 2px 8px #000;
+}
+#exportContent {
+  background: var(--card-bg);
+  padding: 24px 16px;
+  border-radius: var(--border-radius);
+  max-width: 90vw;
+  max-height: 80vh;
+  overflow: auto;
+  text-align: left;
+  color: var(--text-main);
+}
+footer {
+  position: fixed;
+  bottom: 0; left: 0;
+  width: 100%;
+  background: var(--accent-dark);
+  color: var(--text-light);
+  padding: 2px 0;
+  text-align: center;
+  font-size: 0.95em;
+  z-index: 100;
+  height: 28px;
+  line-height: 24px;
+  box-shadow: 0 -2px 8px #0002;
+  transition: background var(--transition);
+}
+#privacy-banner {
+  background: var(--accent-dark);
+  color: var(--text-light);
+  padding: 12px 0;
+  font-size: 1.1em;
+  border-bottom: 2px solid var(--accent);
+  box-shadow: 0 2px 8px #0001;
+}
+select {
+  font-size: 1em;
+  padding: 2px 8px;
+  border-radius: 8px;
+  border: 1px solid #b0c4d4;
+  background: #f6fbff;
+  color: var(--text-main);
+  margin-left: 6px;
+}
+
+/* Animações customizadas */
+@keyframes bounce {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-30px); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Responsividade */
+@media (max-width: 700px) {
+  #game-area { flex-direction: column; align-items: center; gap: 0; }
+  #chessboard { width: 98vw; max-width: 98vw; }
+  #timers { font-size: 1em; }
+  #history, #stats, #chat { max-width: 98vw; min-width: unset; }
+  #chat-messages { height: 80px; font-size: 0.95em; }
+}
+
+/* Classes utilitárias para Animate.css */
+.animated { animation-duration: 0.7s; animation-fill-mode: both; }
+.animate__fadeIn { animation-name: fadeIn; }
+.animate__bounce { animation-name: bounce; }
+.move-highlight {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, #6ec1e4cc 40%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  position: absolute;
+  left: 0; top: 0;
+  z-index: 10;
+  opacity: 0.7;
+} 

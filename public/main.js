@@ -145,6 +145,27 @@ socket.on('move', (data) => {
   }
 });
 
+// --- SONS ---
+const moveSound = new Audio('sounds/move.mp3');
+const winSound = new Audio('sounds/win.mp3');
+const loseSound = new Audio('sounds/lose.mp3');
+moveSound.preload = 'auto';
+winSound.preload = 'auto';
+loseSound.preload = 'auto';
+
+function playMoveSound() {
+  moveSound.currentTime = 0;
+  moveSound.play();
+}
+function playWinSound() {
+  winSound.currentTime = 0;
+  winSound.play();
+}
+function playLoseSound() {
+  loseSound.currentTime = 0;
+  loseSound.play();
+}
+
 socket.on('gameOver', (data) => {
   statusDiv.textContent = t('game_over');
   stopTimers();
@@ -152,10 +173,12 @@ socket.on('gameOver', (data) => {
   showGameInfo(false);
   resignBtn.style.display = 'none';
   if (game && !game.in_draw()) {
-    // Verifica se o jogador venceu
     const winnerColor = game.turn() === 'w' ? 'black' : 'white';
     if (winnerColor === myColor) {
       showVictoryOverlay(true, t('victory'));
+      playWinSound();
+    } else {
+      playLoseSound();
     }
   }
   timersDiv.style.display = 'none';
@@ -216,15 +239,15 @@ socket.on('opponentReconnected', () => {
 socket.on('resigned', (data) => {
   if (data.winner === myColor) {
     statusDiv.textContent = t('opponent_resigned');
+    showVictoryOverlay(true, t('victory'));
+    playWinSound();
   } else {
     statusDiv.textContent = t('you_resigned');
+    playLoseSound();
   }
   stopTimers();
   resignBtn.style.display = 'none';
   showGameInfo(false);
-  if (data.winner === myColor) {
-    showVictoryOverlay(true, t('victory'));
-  }
   timersDiv.style.display = 'none';
   clearRoomSession();
 });
@@ -250,12 +273,31 @@ function onDragStart(source, piece, position, orientation) {
   }
 }
 
+// Animação ao mover peça: highlight animado
+function animateMoveHighlight(square) {
+  const boardDiv = document.getElementById('chessboard');
+  if (!boardDiv) return;
+  const highlight = document.createElement('div');
+  highlight.className = 'move-highlight animate__animated animate__flash';
+  highlight.style.position = 'absolute';
+  highlight.style.pointerEvents = 'none';
+  highlight.style.zIndex = 10;
+  // Precisa calcular a posição do quadrado na board (ajustar para chessboard.js)
+  // Aqui é um exemplo genérico, ajuste conforme necessário:
+  // highlight.style.left = ...; highlight.style.top = ...;
+  boardDiv.appendChild(highlight);
+  setTimeout(() => boardDiv.removeChild(highlight), 700);
+}
+
+// Modificar onDrop para animar highlight
 function onDrop(source, target) {
   if (!game) return 'snapback';
   const move = game.move({ from: source, to: target, promotion: 'q' });
   if (move === null) return 'snapback';
   socket.emit('move', { roomId, from: source, to: target, promotion: 'q' });
   updateStatus();
+  animateMoveHighlight(target); // animação ao mover
+  playMoveSound();
 }
 
 function onSnapEnd() {
@@ -274,6 +316,8 @@ function updateStatus() {
     status = t('turn', { color: moveColor }) + (game.in_check() ? t('check') : '');
   }
   statusDiv.textContent = status;
+  statusDiv.classList.add('animate__animated', 'animate__fadeIn');
+  setTimeout(() => statusDiv.classList.remove('animate__animated', 'animate__fadeIn'), 700);
 }
 
 function formatTime(seconds) {
@@ -321,18 +365,10 @@ function updateHistoryAndStats() {
   moveList.innerHTML = '';
   let captures = 0;
   let checks = 0;
-  history.forEach((move, idx) => {
+  game.history().forEach((move, idx) => {
     const li = document.createElement('li');
-    let moveText = `${move.from}-${move.to}`;
-    if (move.captured) {
-      moveText += ` (${t('capture')}: ${move.captured})`;
-      captures++;
-    }
-    if (move.san.includes('+')) {
-      moveText += ` (${t('check')})`;
-      checks++;
-    }
-    li.textContent = moveText;
+    li.textContent = move;
+    li.className = 'animate__animated animate__fadeIn';
     moveList.appendChild(li);
   });
   moveCountSpan.textContent = history.length;
@@ -347,25 +383,28 @@ function showGameInfo(show) {
 }
 
 function showVictoryOverlay(show, msg) {
-  victoryOverlay.style.display = show ? 'flex' : 'none';
-  if (msg) victoryOverlay.querySelector('div').textContent = msg;
+  if (show) {
+    victoryOverlay.style.display = 'flex';
+    victoryOverlay.classList.add('animate__animated', 'animate__fadeIn');
+    const img = victoryOverlay.querySelector('img');
+    if (img) img.classList.add('animate__animated', 'animate__bounce');
+    if (msg) victoryOverlay.querySelector('div').textContent = msg;
+  } else {
+    victoryOverlay.style.display = 'none';
+    victoryOverlay.classList.remove('animate__animated', 'animate__fadeIn');
+    const img = victoryOverlay.querySelector('img');
+    if (img) img.classList.remove('animate__animated', 'animate__bounce');
+  }
 }
 showVictoryOverlay(false);
 
 showGameInfo(false); // Esconde ao carregar 
 
 function addChatMessage({ name, text, type, senderId }) {
-  const div = document.createElement('div');
-  div.style.marginBottom = '2px';
-  let color = '#ccc';
-  let badge = '';
-  if (type === 'player') {
-    badge = '⭐ ';
-    if (name === myChatName) color = '#6f6';
-    else color = '#39f';
-  }
-  div.innerHTML = `<span style="font-weight:bold;color:${color};">${badge}${name}:</span> <span style="color:#fff;">${text}</span>`;
-  chatMessages.appendChild(div);
+  const msgDiv = document.createElement('div');
+  msgDiv.textContent = `${name}: ${text}`;
+  msgDiv.className = 'animate__animated animate__fadeIn';
+  chatMessages.appendChild(msgDiv);
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
@@ -387,8 +426,10 @@ function getRandomFilename() {
   return `privatechess_${rand}.png`;
 }
 
+// Animação de entrada/saída para modais
 function showExportModal(content, isImage, filename) {
   exportModal.style.display = 'flex';
+  exportModal.classList.add('animate__animated', 'animate__fadeInDown');
   exportContent.innerHTML = '';
   downloadExportBtn.style.display = isImage || filename ? '' : 'none';
   if (isImage) {
@@ -401,16 +442,23 @@ function showExportModal(content, isImage, filename) {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      // Destruir snapshot após download
       if (lastSnapshotCanvas && lastSnapshotCanvas.parentNode) {
         lastSnapshotCanvas.parentNode.removeChild(lastSnapshotCanvas);
       }
       lastSnapshotCanvas = null;
-      exportModal.style.display = 'none';
+      closeExportModal();
     };
     copyExportBtn.style.display = 'none';
   }
 }
+window.closeExportModal = function() {
+  exportModal.classList.remove('animate__fadeInDown');
+  exportModal.classList.add('animate__fadeOutUp');
+  setTimeout(() => {
+    exportModal.style.display = 'none';
+    exportModal.classList.remove('animate__animated', 'animate__fadeOutUp');
+  }, 600);
+};
 
 window.copyExportText = function() {
   const textarea = exportContent.querySelector('textarea');
@@ -418,9 +466,6 @@ window.copyExportText = function() {
     textarea.select();
     document.execCommand('copy');
   }
-};
-window.closeExportModal = function() {
-  exportModal.style.display = 'none';
 };
 
 snapshotBtn.onclick = () => {

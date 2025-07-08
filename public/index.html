@@ -4,38 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Private CHESS</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    body { background: #222; color: #fff; font-family: Arial, sans-serif; text-align: center; margin: 0; padding-bottom: 72px; }
-    #game-area {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      gap: 40px;
-      margin-top: 30px;
-    }
-    #timers { margin-bottom: 16px; text-align: center; font-size: 1.1em; font-weight: bold; }
-    #chessboard { margin: 0 auto; width: min(90vw, 90vh); max-width: 600px; }
-    #status { margin: 20px; font-size: 1.2em; }
-    button, input[type="text"] {
-      padding: 12px 18px;
-      font-size: 1.1em;
-      border-radius: 6px;
-      margin: 4px 0;
-      box-sizing: border-box;
-    }
-    #private-room-controls { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; align-items: center; }
-    #private-room-controls input { min-width: 110px; }
-    @media (max-width: 700px) {
-      #game-area { flex-direction: column; align-items: center; gap: 0; }
-      #chessboard { width: 98vw; max-width: 98vw; }
-      #timers { font-size: 1em; }
-      #history, #stats, #chat { max-width: 98vw; min-width: unset; }
-      #chat-messages { height: 80px; font-size: 0.95em; }
-    }
-    @keyframes bounce {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(-30px); }
-    }
+    /* Remover todo o CSS embutido daqui, pois será migrado para style.css */
   </style>
 </head>
 <body>

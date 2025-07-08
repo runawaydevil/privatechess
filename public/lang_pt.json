@@ -37,5 +37,6 @@
   "language": "Idioma",
   "portuguese": "Português",
   "english": "Inglês",
-  "russian": "Russo"
+  "russian": "Russo",
+  "waiting_for_opponent": "Aguardando outro jogador se conectar..."
 } 
