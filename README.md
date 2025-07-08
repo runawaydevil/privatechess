@@ -1,5 +1,7 @@
 # Private CHESS
 
+**Live demo:** [https://privatechess.1208.pro](https://privatechess.1208.pro)
+
 Private CHESS is a secure, anonymous, and privacy-focused online chess game for two players. It features automatic color pairing, private rooms, anonymous chat, move timer, game history, statistics, and a modern web interface. The project is mobile-first, PWA-ready, and supports multilingual UI (Portuguese, English, Russian).
 
 ## Features
