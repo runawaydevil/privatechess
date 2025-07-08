@@ -196,6 +196,6 @@ io.on('connection', (socket) => {
   });
 });
 
-server.listen(PORT, () => {
-  console.log(`Private CHESS rodando em http://localhost:${PORT}`);
+server.listen(PORT, '127.0.0.1', () => {
+  console.log(`Private CHESS rodando em http://127.0.0.1:${PORT}`);
 }); 
