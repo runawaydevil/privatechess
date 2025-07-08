@@ -44,7 +44,6 @@ body {
   border-radius: var(--border-radius);
   box-shadow: var(--shadow);
   padding: 10px 0;
-  margin-top: 0;
 }
 
 #chessboard {
@@ -88,13 +87,7 @@ button:active {
   background: var(--accent-dark);
   transform: scale(0.98);
 }
-#resignBtn {
-  background: var(--danger);
-  color: var(--text-light);
-}
-#resignBtn:hover {
-  background: #c0392b;
-}
+
 #private-room-controls {
   display: flex;
   flex-wrap: wrap;
@@ -125,6 +118,7 @@ button:active {
 #history h3, #stats h3, #chat h3 {
   margin-top: 0;
   color: var(--accent-dark);
+
   font-size: 1.1em;
 }
 #move-list {
@@ -135,29 +129,19 @@ button:active {
 }
 #chat {
   margin-top: 30px;
-  background: var(--secondary-bg);
+  background: var(--card-bg);
   padding: 12px 8px 8px 8px;
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow);
 }
 #chat-messages {
-  height: 120px;
-  overflow-y: auto;
-  background: #eaf6fa;
-  padding: 6px 4px 6px 8px;
-  border-radius: 8px;
-  font-size: 1em;
-  margin-bottom: 8px;
-  color: var(--text-main);
 }
 #chat-form {
   display: flex;
   gap: 6px;
 }
 #chat-input {
-  flex: 1;
+ flex: 1;
   padding: 4px 8px;
-  border-radius: 8px;
+  border-radius: 8px; /* Borda mais arredondada */
   border: 1px solid #b0c4d4;
   background: #f6fbff;
   color: var(--text-main);
@@ -167,7 +151,7 @@ button:active {
   color: var(--text-light);
   border: none;
   padding: 4px 12px;
-  border-radius: 8px;
+  border-radius: 8px; /* Borda mais arredondada */
 }
 #victory-overlay, #exportModal {
   display: none;
@@ -202,6 +186,14 @@ button:active {
   overflow: auto;
   text-align: left;
   color: var(--text-main);
+  background: var(--card-bg);
+  padding: 24px 16px;
+  border-radius: var(--border-radius);
+  max-width: 90vw;
+  max-height: 80vh;
+  overflow: auto;
+  text-align: left;
+  color: var(--text-main);
 }
 footer {
   position: fixed;
@@ -218,16 +210,38 @@ footer {
   box-shadow: 0 -2px 8px #0002;
   transition: background var(--transition);
 }
-#privacy-banner {
-  background: var(--accent-dark);
-  color: var(--text-light);
-  padding: 12px 0;
-  font-size: 1.1em;
-  border-bottom: 2px solid var(--accent);
-  box-shadow: 0 2px 8px #0001;
+.game-board-container {
+  /* min-width: 220px; Removido, o min-width será tratado pelo tabuleiro */
+  max-width: 600px; /* Ajustado para o max-width do tabuleiro */
+  width: 100%; /* Garantir que ocupe a largura disponível */
+}
+
+@media (max-width: 700px) {
+  .game-board-container {
+    max-width: 98vw; /* Ajuste para telas pequenas */
+  }
+}
+
+.game-sidebar {
+  min-width: 220px;
+  max-width: 300px;
+  width: 100%; /* Garantir que ocupe a largura disponível */
+}
+
+@media (max-width: 700px) {
+  .game-sidebar {
+    min-width: unset; /* Permitir que a largura seja automática em telas pequenas */
+    max-width: 98vw; /* Ajuste para telas pequenas */
+  }
+}
+#resignBtn {
+ background: var(--danger);
+ color: var(--text-light);
+}
+#resignBtn:hover {
+ background: #c0392b; /* Um tone mais escuro para o hover */
 }
 select {
-  font-size: 1em;
   padding: 2px 8px;
   border-radius: 8px;
   border: 1px solid #b0c4d4;
@@ -236,6 +250,23 @@ select {
   margin-left: 6px;
 }
 
+.language-selector-container {
+  width: 100%;
+  text-align: right;
+  padding: 8px 16px 0 0;
+}
+.language-selector-container label {
+  font-weight: bold;
+}
+
+#privacy-banner {
+  background: var(--accent-dark);
+  color: var(--text-light);
+  padding: 12px 0;
+  font-size: 1.1em;
+  border-bottom: 2px solid var(--accent);
+  box-shadow: 0 2px 8px #0001;
+}
 /* Animações customizadas */
 @keyframes bounce {
   0% { transform: translateY(0); }
@@ -255,6 +286,17 @@ select {
   #chat-messages { height: 80px; font-size: 0.95em; }
 }
 
+#chat-messages {
+  height: 120px;
+  overflow-y: auto;
+  background: #eaf6fa; /* Um fundo mais claro para as mensagens */
+  padding: 6px 4px 6px 8px;
+  border-radius: 8px; /* Borda mais arredondada */
+  font-size: 1em;
+  margin-bottom: 8px;
+  color: var(--text-main); /* Cor do texto */
+}
+
 /* Classes utilitárias para Animate.css */
 .animated { animation-duration: 0.7s; animation-fill-mode: both; }
 .animate__fadeIn { animation-name: fadeIn; }
@@ -270,3 +312,15 @@ select {
   z-index: 10;
   opacity: 0.7;
 } 
+
+#downloadExportBtn {
+  margin-left: 8px;
+}
+
+.export-modal-buttons button {
+  font-size: 1em;
+}
+
+.export-modal-buttons {
+  margin-top: 16px;
+}
