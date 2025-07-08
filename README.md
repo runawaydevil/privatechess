@@ -1,53 +1,48 @@
-# ♟️ Private CHESS
+# Private CHESS
 
-Private CHESS é um jogo de xadrez online para dois jogadores, totalmente anônimo, seguro e sem coleta de dados.
+Private CHESS is a secure, anonymous, and privacy-focused online chess game for two players. It features automatic color pairing, private rooms, anonymous chat, move timer, game history, statistics, and a modern web interface. The project is mobile-first, PWA-ready, and supports multilingual UI (Portuguese, English, Russian).
 
-## Funcionalidades
-- Jogo de xadrez em tempo real para 2 jogadores
-- Atribuição automática de cor (brancas/pretas)
-- Histórico de movimentos e estatísticas
-- Timer individual para cada jogador
-- Botão para desistir da partida
-- Overlay animado de vitória
-- Layout responsivo
-- Aviso de privacidade: não coletamos nenhum dado dos jogadores
+## Features
+- Anonymous, secure, and private chess matches
+- Automatic color pairing
+- Private rooms with code
+- Anonymous chat with random names
+- Move timer (starts after first move)
+- Game history and statistics
+- Resign button and victory overlay
+- Export board snapshot as PNG (with watermark and move list)
+- No game data or snapshots are stored on the server
+- Responsive (mobile-first)
+- PWA (installable on mobile/desktop)
+- Multilingual interface: Portuguese, English, Russian
+- Privacy notice banner
 
-## Privacidade e Segurança
-- **100% anônimo:** Nenhum dado pessoal é solicitado ou armazenado
-- **Sem cadastro ou login**
-- **Sem histórico persistente**
-- **Comunicação segura** (recomenda-se rodar atrás de HTTPS em produção)
-
-## Instalação
-1. Clone o repositório:
+## How to Use
+1. Clone this repository:
    ```bash
-   git clone https://github.com/seu-usuario/privatechess.git
-   cd privatechess
+   git clone <repo-url>
+   cd PrivateCHESS
    ```
-2. Instale as dependências:
+2. Install dependencies:
    ```bash
    npm install
    ```
-3. Inicie o servidor:
+3. Start the server:
    ```bash
    node server.js
    ```
-4. Acesse no navegador:
-   - [http://localhost:8743](http://localhost:8743)
+4. Open your browser and go to [http://localhost:8743](http://localhost:8743)
 
-## Estrutura
-- `server.js` — Backend Node.js com Express e Socket.IO
-- `public/` — Frontend (HTML, JS, CSS, imagens)
-- `public/baby.gif` — GIF exibido ao vencer
+## Project Structure
+- `server.js`: Node.js backend with Express and Socket.IO
+- `public/`: Frontend static files (HTML, JS, CSS, chess assets)
+- `public/lang_*.json`: Translation files
 
-## Como jogar
-1. Abra dois navegadores em `http://localhost:8743`
-2. Clique em "Iniciar jogo" em ambos
-3. Jogue normalmente, use o botão "Desistir" se quiser encerrar
+## Credits
+- Chess logic: [chess.js](https://github.com/jhlywa/chess.js)
+- Board UI: [chessboard.js](https://github.com/oakmac/chessboardjs)
+- SVG pieces: Wikimedia Commons
+- Developed by Pablo Murad
 
-## Créditos
-Desenvolvido por [Pablo Murad (runawaydevil)](https://github.com/runawaydevil)
-
----
-
-> 🔒 Private CHESS: Este jogo é seguro, privado e não coletamos nenhum dado dos jogadores. 
+## License
+MIT License 

@@ -1,45 +1,23 @@
-# Melhorias Futuras — Private CHESS
+# FUTURE IMPROVEMENTS
 
-Aqui estão algumas ideias e sugestões para evoluir o Private CHESS nas próximas versões:
+## Already Implemented
+- Lost connection detection: warns if opponent disconnects, allows reconnection, and shows a timer before automatic victory.
+- Multilingual support: Portuguese, English, Russian. User can select language in the interface.
+- Translatable footer and all interface texts.
+- Private rooms with code and automatic destruction if creator leaves.
+- Anonymous chat with random names and player badge.
+- Board snapshot export as PNG with watermark and move list.
+- No game or snapshot data stored on the server.
+- Responsive, mobile-first layout and PWA support.
 
-## Funcionalidades
-
-- **Salas privadas com código**
-  - Jogadores podem criar uma sala privada e compartilhar um código para jogar apenas com amigos.
-
-- **Chat anônimo**
-  - Comunicação simples entre jogadores durante a partida, mantendo o anonimato.
-
-- **Modo espectador**
-  - Permitir que terceiros assistam a partidas em andamento.
-
-- **Mobile first / PWA**
-  - Melhorar responsividade e criar um Progressive Web App para uso em celulares.
-
-- **Temporizador decrescente (blitz/rápido)**
-  - Modos de tempo customizáveis (ex: 5+0, 10+5).
-
-- **Temas de tabuleiro e peças**
-  - Opções de personalização visual para o usuário.
-
-- **Exportar/Importar PGN**
-  - Baixar histórico da partida em formato PGN ou FEN.
-
-- **Detecção de conexão perdida**
-  - Avisar se o adversário caiu e permitir reconexão.
-
-- **Acessibilidade**
-  - Melhorar navegação por teclado e suporte a leitores de tela.
-
-- **Modo análise pós-jogo**
-  - Permitir que os jogadores analisem posições livremente após o fim da partida.
-
-- **Ranking local (opcional e anônimo)**
-  - Estatísticas locais de vitórias, derrotas e empates, apenas no navegador do usuário.
-
-- **Tradução/multilíngue**
-  - Suporte a outros idiomas além do português.
-
----
-
-Sinta-se à vontade para sugerir, priorizar ou contribuir com novas ideias! 
+## Possible Future Features
+- Spectator mode (watch games in progress)
+- Post-game analysis and move suggestions
+- Local ranking/leaderboard
+- Custom board and piece themes
+- Sound effects and notifications
+- Accessibility improvements
+- More languages
+- Game rematch button
+- Invite link for private rooms
+- Anti-cheat and fair play detection 

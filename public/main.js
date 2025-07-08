@@ -20,21 +20,85 @@ const historyDiv = document.getElementById('history');
 const statsDiv = document.getElementById('stats');
 const resignBtn = document.getElementById('resignBtn');
 const victoryOverlay = document.getElementById('victory-overlay');
+const createRoomBtn = document.getElementById('createRoomBtn');
+const joinRoomBtn = document.getElementById('joinRoomBtn');
+const roomCodeInput = document.getElementById('roomCodeInput');
+const roomCodeDisplay = document.getElementById('roomCodeDisplay');
+const privateRoomControls = document.getElementById('private-room-controls');
+const chatMessages = document.getElementById('chat-messages');
+const chatForm = document.getElementById('chat-form');
+const chatInput = document.getElementById('chat-input');
+let myChatName = '';
+let opponentChatName = '';
+
+const exportPgnBtn = document.getElementById('exportPgnBtn');
+const exportFenBtn = document.getElementById('exportFenBtn');
+const snapshotBtn = document.getElementById('snapshotBtn');
+const exportModal = document.getElementById('exportModal');
+const exportContent = document.getElementById('exportContent');
+const downloadExportBtn = document.getElementById('downloadExportBtn');
+const copyExportBtn = document.getElementById('copyExportBtn');
+let lastSnapshotCanvas = null;
+
+// Supondo que o timer está em um elemento com id 'timers'
+const timersDiv = document.getElementById('timers');
+timersDiv.style.display = 'none';
 
 startBtn.onclick = () => {
   socket.emit('joinGame');
   startBtn.disabled = true;
-  statusDiv.textContent = 'Aguardando outro jogador...';
+  statusDiv.textContent = t('waiting_for_opponent');
 };
 
 socket.on('waiting', () => {
-  statusDiv.textContent = 'Aguardando outro jogador...';
+  statusDiv.textContent = t('waiting_for_opponent');
+});
+
+createRoomBtn.onclick = () => {
+  console.log('Botão Criar Sala Privada clicado');
+  socket.emit('createRoom');
+  // Não desabilitar botões ainda
+  statusDiv.textContent = t('waiting_for_opponent_to_join');
+};
+
+// Recebe o código da sala criada
+socket.on('roomCreated', ({ code }) => {
+  console.log('Código da sala recebido:', code);
+  roomCodeDisplay.style.display = '';
+  roomCodeDisplay.textContent = t('room_code', { code: code });
+  roomCodeInput.value = code;
+  createRoomBtn.disabled = true;
+  joinRoomBtn.disabled = true;
+  startBtn.disabled = true;
+});
+
+joinRoomBtn.onclick = () => {
+  const code = roomCodeInput.value.trim().toUpperCase();
+  console.log('Tentando entrar na sala com código:', code);
+  if (code.length === 6) {
+    socket.emit('joinRoom', { code });
+    createRoomBtn.disabled = true;
+    joinRoomBtn.disabled = true;
+    startBtn.disabled = true;
+    statusDiv.textContent = t('trying_to_join_room');
+  } else {
+    statusDiv.textContent = t('enter_6_char_code');
+  }
+};
+
+socket.on('roomError', ({ message }) => {
+  console.log('Erro ao entrar/criar sala:', message);
+  statusDiv.textContent = message;
+  createRoomBtn.disabled = false;
+  joinRoomBtn.disabled = false;
+  startBtn.disabled = false;
+  roomCodeDisplay.style.display = 'none';
 });
 
 socket.on('gameStart', (data) => {
   myColor = data.color;
   roomId = data.roomId;
-  statusDiv.textContent = `Você está jogando com as peças ${myColor === 'white' ? 'brancas' : 'pretas'}.`;
+  statusDiv.textContent = t('playing_with', { color: myColor === 'white' ? t('white_pieces') : t('black_pieces') });
   startBtn.style.display = 'none';
   game = new Chess();
   board = Chessboard('chessboard', {
@@ -44,7 +108,7 @@ socket.on('gameStart', (data) => {
     onDragStart: onDragStart,
     onDrop: onDrop,
     onSnapEnd: onSnapEnd,
-    pieceTheme: 'https://chessboardjs.com/img/chesspieces/wikipedia/{piece}.png',
+    pieceTheme: 'img/chesspieces/wikipedia/{piece}.svg',
     width: Math.min(window.innerWidth, window.innerHeight) * 0.9
   });
   updateStatus();
@@ -52,12 +116,20 @@ socket.on('gameStart', (data) => {
   blackSeconds = 0;
   whiteTimerSpan.textContent = '0:00';
   blackTimerSpan.textContent = '0:00';
-  updateTimers();
+  stopTimers(); // Garante que não há timer rodando
   updateHistoryAndStats();
   showGameInfo(true);
   resignBtn.style.display = '';
   resignBtn.disabled = false;
+  privateRoomControls.style.display = 'none';
+  roomCodeDisplay.style.display = 'none';
+  myChatName = data.myChatName;
+  opponentChatName = data.opponentChatName;
+  chatMessages.innerHTML = '';
   showVictoryOverlay(false);
+  timersDiv.style.display = '';
+  sessionStorage.setItem('privatechess_room', data.roomId);
+  sessionStorage.setItem('privatechess_color', data.color);
 });
 
 socket.on('move', (data) => {
@@ -71,7 +143,7 @@ socket.on('move', (data) => {
 });
 
 socket.on('gameOver', (data) => {
-  statusDiv.textContent = 'Fim de jogo!';
+  statusDiv.textContent = t('game_over');
   stopTimers();
   updateHistoryAndStats();
   showGameInfo(false);
@@ -80,33 +152,78 @@ socket.on('gameOver', (data) => {
     // Verifica se o jogador venceu
     const winnerColor = game.turn() === 'w' ? 'black' : 'white';
     if (winnerColor === myColor) {
-      showVictoryOverlay(true);
+      showVictoryOverlay(true, t('victory'));
     }
   }
+  timersDiv.style.display = 'none';
+  clearRoomSession();
 });
 
 socket.on('opponentLeft', () => {
-  statusDiv.textContent = 'O adversário saiu da partida.';
+  statusDiv.textContent = t('opponent_left');
   startBtn.style.display = '';
   startBtn.disabled = false;
   stopTimers();
   showGameInfo(false);
-  showVictoryOverlay(true);
+  showVictoryOverlay(true, t('victory'));
   resignBtn.style.display = 'none';
+  timersDiv.style.display = 'none';
+  clearRoomSession();
+});
+
+socket.on('opponentDisconnected', ({ timeout }) => {
+  statusDiv.textContent = t('opponent_disconnected');
+  let remaining = timeout;
+  showGameInfo(false);
+  stopTimers();
+  resignBtn.style.display = 'none';
+  timersDiv.style.display = 'none';
+  let waitingTimer = document.createElement('div');
+  waitingTimer.id = 'waiting-timer';
+  waitingTimer.style.fontSize = '1.3em';
+  waitingTimer.style.margin = '18px 0 0 0';
+  waitingTimer.style.color = '#ff0';
+  waitingTimer.textContent = `${t('waiting_victory')} ${remaining}s`;
+  statusDiv.appendChild(waitingTimer);
+  let interval = setInterval(() => {
+    remaining--;
+    if (waitingTimer) waitingTimer.textContent = `${t('waiting_victory')} ${remaining}s`;
+    if (remaining <= 0) {
+      clearInterval(interval);
+      if (waitingTimer && waitingTimer.parentNode) waitingTimer.parentNode.removeChild(waitingTimer);
+    }
+  }, 1000);
+  // Guardar para limpar depois
+  window._waitingReconnectInterval = interval;
+  window._waitingReconnectDiv = waitingTimer;
+});
+
+socket.on('opponentReconnected', () => {
+  statusDiv.textContent = t('opponent_reconnected');
+  if (window._waitingReconnectInterval) clearInterval(window._waitingReconnectInterval);
+  if (window._waitingReconnectDiv && window._waitingReconnectDiv.parentNode) window._waitingReconnectDiv.parentNode.removeChild(window._waitingReconnectDiv);
+  setTimeout(() => {
+    updateStatus();
+    showGameInfo(true);
+    timersDiv.style.display = '';
+    resignBtn.style.display = '';
+  }, 1200);
 });
 
 socket.on('resigned', (data) => {
   if (data.winner === myColor) {
-    statusDiv.textContent = 'O adversário desistiu. Você venceu!';
+    statusDiv.textContent = t('opponent_resigned');
   } else {
-    statusDiv.textContent = 'Você desistiu. Vitória do adversário!';
+    statusDiv.textContent = t('you_resigned');
   }
   stopTimers();
   resignBtn.style.display = 'none';
   showGameInfo(false);
   if (data.winner === myColor) {
-    showVictoryOverlay(true);
+    showVictoryOverlay(true, t('victory'));
   }
+  timersDiv.style.display = 'none';
+  clearRoomSession();
 });
 
 resignBtn.onclick = () => {
@@ -145,13 +262,13 @@ function onSnapEnd() {
 function updateStatus() {
   if (!game) return;
   let status = '';
-  let moveColor = game.turn() === 'w' ? 'brancas' : 'pretas';
+  let moveColor = game.turn() === 'w' ? t('white_time').replace(':','') : t('black_time').replace(':','');
   if (game.in_checkmate()) {
-    status = 'Xeque-mate! ' + (game.turn() === 'w' ? 'Pretas' : 'Brancas') + ' venceram.';
+    status = t('checkmate', { winner: game.turn() === 'w' ? t('black_time').replace(':','') : t('white_time').replace(':','') });
   } else if (game.in_draw()) {
-    status = 'Empate!';
+    status = t('draw');
   } else {
-    status = 'Vez das ' + moveColor + (game.in_check() ? ' (xeque!)' : '');
+    status = t('turn', { color: moveColor }) + (game.in_check() ? t('check') : '');
   }
   statusDiv.textContent = status;
 }
@@ -205,11 +322,11 @@ function updateHistoryAndStats() {
     const li = document.createElement('li');
     let moveText = `${move.from}-${move.to}`;
     if (move.captured) {
-      moveText += ` (captura: ${move.captured})`;
+      moveText += ` (${t('capture')}: ${move.captured})`;
       captures++;
     }
     if (move.san.includes('+')) {
-      moveText += ' (xeque)';
+      moveText += ` (${t('check')})`;
       checks++;
     }
     li.textContent = moveText;
@@ -225,9 +342,209 @@ function showGameInfo(show) {
   statsDiv.style.display = show ? '' : 'none';
 }
 
-function showVictoryOverlay(show) {
+function showVictoryOverlay(show, msg) {
   victoryOverlay.style.display = show ? 'flex' : 'none';
+  if (msg) victoryOverlay.querySelector('div').textContent = msg;
 }
 showVictoryOverlay(false);
 
 showGameInfo(false); // Esconde ao carregar 
+
+function addChatMessage({ name, text, type, senderId }) {
+  const div = document.createElement('div');
+  div.style.marginBottom = '2px';
+  let color = '#ccc';
+  let badge = '';
+  if (type === 'player') {
+    badge = '⭐ ';
+    if (name === myChatName) color = '#6f6';
+    else color = '#39f';
+  }
+  div.innerHTML = `<span style="font-weight:bold;color:${color};">${badge}${name}:</span> <span style="color:#fff;">${text}</span>`;
+  chatMessages.appendChild(div);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+chatForm.onsubmit = (e) => {
+  e.preventDefault();
+  const text = chatInput.value.trim();
+  if (text && myChatName) {
+    socket.emit('chatMessage', { roomId, text });
+    chatInput.value = '';
+  }
+};
+
+socket.on('chatMessage', ({ name, text, type, senderId }) => {
+  addChatMessage({ name, text, type, senderId });
+}); 
+
+function getRandomFilename() {
+  const rand = Math.floor(10000000 + Math.random() * 90000000);
+  return `privatechess_${rand}.png`;
+}
+
+function showExportModal(content, isImage, filename) {
+  exportModal.style.display = 'flex';
+  exportContent.innerHTML = '';
+  downloadExportBtn.style.display = isImage || filename ? '' : 'none';
+  if (isImage) {
+    exportContent.appendChild(content);
+    lastSnapshotCanvas = content;
+    downloadExportBtn.onclick = function() {
+      const link = document.createElement('a');
+      link.href = content.toDataURL('image/png');
+      link.download = getRandomFilename();
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      // Destruir snapshot após download
+      if (lastSnapshotCanvas && lastSnapshotCanvas.parentNode) {
+        lastSnapshotCanvas.parentNode.removeChild(lastSnapshotCanvas);
+      }
+      lastSnapshotCanvas = null;
+      exportModal.style.display = 'none';
+    };
+    copyExportBtn.style.display = 'none';
+  }
+}
+
+window.copyExportText = function() {
+  const textarea = exportContent.querySelector('textarea');
+  if (textarea) {
+    textarea.select();
+    document.execCommand('copy');
+  }
+};
+window.closeExportModal = function() {
+  exportModal.style.display = 'none';
+};
+
+snapshotBtn.onclick = () => {
+  const boardDiv = document.getElementById('chessboard');
+  html2canvas(boardDiv).then(canvas => {
+    // Adicionar marca d'água pequena
+    const ctx = canvas.getContext('2d');
+    ctx.save();
+    ctx.font = 'bold 12px Arial';
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'bottom';
+    ctx.shadowColor = '#000';
+    ctx.shadowBlur = 2;
+    ctx.fillText('Private CHESS', canvas.width - 8, canvas.height - 4);
+    ctx.restore();
+    // Criar container para imagem e lista de movimentos
+    const container = document.createElement('div');
+    container.style.display = 'flex';
+    container.style.flexDirection = 'column';
+    container.style.alignItems = 'center';
+    container.appendChild(canvas);
+    if (game) {
+      const movesDiv = document.createElement('div');
+      movesDiv.style.marginTop = '16px';
+      movesDiv.style.background = '#181818';
+      movesDiv.style.color = '#fff';
+      movesDiv.style.padding = '10px 16px';
+      movesDiv.style.borderRadius = '8px';
+      movesDiv.style.maxWidth = '90vw';
+      movesDiv.style.fontSize = '1em';
+      movesDiv.innerHTML = '<b>' + t('moves') + ':</b><br>' + game.history().map((m, i) => ((i%2===0?((i/2)+1)+'. ':'')+m)).join(' ');
+      container.appendChild(movesDiv);
+    }
+    showExportModal(container, true, 'tabuleiro.png');
+  });
+}; 
+
+// Reconexão automática ao recarregar
+window.addEventListener('load', () => {
+  const savedRoom = sessionStorage.getItem('privatechess_room');
+  const savedColor = sessionStorage.getItem('privatechess_color');
+  if (savedRoom && savedColor) {
+    socket.emit('reconnectToRoom', { roomId: savedRoom, color: savedColor });
+  }
+});
+// Salvar roomId e cor ao entrar no jogo
+socket.on('gameStart', (data) => {
+  // ... código existente ...
+  sessionStorage.setItem('privatechess_room', data.roomId);
+  sessionStorage.setItem('privatechess_color', data.color);
+});
+// Limpar ao fim do jogo
+function clearRoomSession() {
+  sessionStorage.removeItem('privatechess_room');
+  sessionStorage.removeItem('privatechess_color');
+}
+socket.on('resigned', clearRoomSession);
+socket.on('gameOver', clearRoomSession);
+socket.on('opponentLeft', clearRoomSession); 
+
+let translations = {};
+let currentLang = localStorage.getItem('privatechess_lang') || 'pt';
+
+function t(key, vars) {
+  let str = translations[key] || key;
+  if (vars) {
+    Object.keys(vars).forEach(k => {
+      str = str.replace(`{${k}}`, vars[k]);
+    });
+  }
+  return str;
+}
+
+function applyTranslations() {
+  document.title = t('title');
+  document.getElementById('privacy-banner').textContent = t('privacy_banner');
+  document.getElementById('createRoomBtn').textContent = t('create_room');
+  document.getElementById('joinRoomBtn').textContent = t('join_room');
+  document.getElementById('roomCodeInput').placeholder = t('room_code_placeholder');
+  document.getElementById('startBtn').textContent = t('start_game');
+  document.getElementById('resignBtn').textContent = t('resign');
+  document.querySelector('#history h3').textContent = t('move_history');
+  document.getElementById('snapshotBtn').textContent = t('download_png');
+  document.querySelector('#stats h3').textContent = t('stats');
+  document.getElementById('move-count').previousSibling.textContent = t('moves') + ' ';
+  document.getElementById('capture-count').previousSibling.textContent = t('captures') + ' ';
+  document.getElementById('check-count').previousSibling.textContent = t('checks') + ' ';
+  document.querySelector('#chat h3').textContent = t('chat');
+  document.querySelector('#chat-form button').textContent = t('send');
+  document.getElementById('lang-select').options[0].textContent = t('portuguese');
+  document.getElementById('lang-select').options[1].textContent = t('english');
+  document.getElementById('lang-select').options[2].textContent = t('russian');
+  // Atualizar rodapé
+  document.getElementById('footer-text').textContent = t('footer', { year: new Date().getFullYear() });
+}
+
+function loadLang(lang) {
+  fetch(`lang_${lang}.json`)
+    .then(r => r.json())
+    .then(data => {
+      translations = data;
+      currentLang = lang;
+      localStorage.setItem('privatechess_lang', lang);
+      document.getElementById('lang-select').value = lang;
+      applyTranslations();
+    });
+}
+
+document.getElementById('lang-select').addEventListener('change', e => {
+  loadLang(e.target.value);
+});
+
+// Carregar idioma inicial
+loadLang(currentLang);
+
+// Ajuste para evitar barras de rolagem desnecessárias
+// Garante que body e html ocupem 100% e não tenham overflow
+const style = document.createElement('style');
+style.innerHTML = `
+  html, body { height: 100%; margin: 0; padding: 0; overflow-x: hidden; }
+  #game-area { flex-wrap: wrap; }
+  @media (max-width: 700px) {
+    #game-area { flex-direction: column; align-items: center; gap: 0; }
+    #chessboard { width: 98vw; max-width: 98vw; }
+    #timers { font-size: 1em; }
+    #history, #stats, #chat { max-width: 98vw; min-width: unset; }
+    #chat-messages { height: 80px; font-size: 0.95em; }
+  }
+`;
+document.head.appendChild(style);
