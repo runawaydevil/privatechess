@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Private CHESS</title>
+  <style>
+    body { background: #222; color: #fff; font-family: Arial, sans-serif; text-align: center; }
+    #chessboard { margin: 30px auto; width: min(90vw, 90vh); max-width: 600px; }
+    #status { margin: 20px; font-size: 1.2em; }
+    button { padding: 10px 30px; font-size: 1.1em; cursor: pointer; }
+    @keyframes bounce {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-30px); }
+    }
+  </style>
+</head>
+<body>
+  <h1>Private CHESS</h1>
+  <div id="privacy-banner" style="background:#222;color:#fff;padding:12px 0;font-size:1.1em;border-bottom:2px solid #444;">
+    🔒 Private CHESS: Este jogo é seguro, privado e não coletamos nenhum dado dos jogadores.
+  </div>
+  <div id="status">Clique em "Iniciar jogo" para jogar contra outro jogador.</div>
+  <button id="startBtn">Iniciar jogo</button>
+  <button id="resignBtn" style="display:none;background:#c00;color:#fff;">Desistir</button>
+  <div id="game-area" style="display:flex;justify-content:center;align-items:flex-start;gap:40px;margin-top:30px;">
+    <div>
+      <div id="chessboard"></div>
+      <div id="timers">
+        <div>Tempo das brancas: <span id="white-timer">0:00</span></div>
+        <div>Tempo das pretas: <span id="black-timer">0:00</span></div>
+      </div>
+    </div>
+    <div style="min-width:220px;max-width:300px;">
+      <div id="history" style="margin-top:0;">
+        <h3>Histórico de Movimentos</h3>
+        <ol id="move-list"></ol>
+      </div>
+      <div id="stats" style="margin-top:20px;">
+        <h3>Estatísticas</h3>
+        <div>Lances: <span id="move-count">0</span></div>
+        <div>Capturas: <span id="capture-count">0</span></div>
+        <div>Xeques: <span id="check-count">0</span></div>
+      </div>
+    </div>
+  </div>
+  <div id="victory-overlay" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);z-index:9999;justify-content:center;align-items:center;flex-direction:column;">
+    <img src="baby.gif" alt="Vitória" style="width:220px;max-width:80vw;animation:bounce 1.2s infinite alternate;">
+    <div style="color:#fff;font-size:2.2em;font-weight:bold;margin-top:30px;text-shadow:2px 2px 8px #000;">VOCÊ VENCEU.</div>
+  </div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="chess.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard-1.0.0.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard-1.0.0.min.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>♟️</text></svg>">
+  <script src="main.js"></script>
+  <footer style="position:fixed;bottom:0;left:0;width:100%;background:#111;color:#fff;padding:8px 0;text-align:center;font-size:1em;z-index:100;">
+    Desenvolvido por <a href="https://github.com/runawaydevil" target="_blank" style="color:#fff;text-decoration:underline;">Pablo Murad</a> - <span id="ano-atual"></span>
+  </footer>
+  <script>
+    document.getElementById('ano-atual').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html> 
