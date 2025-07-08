@@ -95,11 +95,17 @@ button:active {
   justify-content: center;
   align-items: center;
 }
-#private-room-controls input {
+#private-room-controls input[type="text"] {
   min-width: 110px;
+  max-width: 220px;
+  width: 100%;
   background: var(--secondary-bg);
   color: var(--text-main);
   border: 1px solid #b0c4d4;
+  box-sizing: border-box;
+  font-size: 1em;
+  padding: 8px 10px;
+  margin: 0 6px;
 }
 #roomCodeDisplay {
   color: var(--success);
@@ -139,19 +145,22 @@ button:active {
   gap: 6px;
 }
 #chat-input {
- flex: 1;
-  padding: 4px 8px;
-  border-radius: 8px; /* Borda mais arredondada */
+  flex: 1 1 0;
+  min-width: 60px;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  border-radius: 8px;
   border: 1px solid #b0c4d4;
   background: #f6fbff;
   color: var(--text-main);
+  font-size: 1em;
 }
 #chat-form button {
-  background: var(--accent);
-  color: var(--text-light);
-  border: none;
-  padding: 4px 12px;
-  border-radius: 8px; /* Borda mais arredondada */
+  flex-shrink: 0;
+  padding: 8px 16px;
+  font-size: 1em;
+  border-radius: 8px;
 }
 #victory-overlay, #exportModal {
   display: none;
@@ -287,14 +296,50 @@ select {
 }
 
 #chat-messages {
-  height: 120px;
+  background: #f6fbff !important;
+  color: #222 !important;
+  border: 1px solid #e3eaf2;
+  min-height: 60px;
+  max-height: 180px;
   overflow-y: auto;
-  background: #eaf6fa; /* Um fundo mais claro para as mensagens */
-  padding: 6px 4px 6px 8px;
-  border-radius: 8px; /* Borda mais arredondada */
+  padding: 8px 6px 8px 10px;
+  border-radius: 10px;
   font-size: 1em;
-  margin-bottom: 8px;
-  color: var(--text-main); /* Cor do texto */
+}
+
+/* Estilos para mensagens do chat */
+.chat-message {
+  padding: 6px 10px;
+  margin-bottom: 4px;
+  border-radius: 8px;
+  font-size: 1em;
+  display: flex;
+  align-items: center;
+  background: #f6fbff;
+  color: #222;
+  box-shadow: 0 1px 4px #0001;
+  word-break: break-word;
+}
+.chat-message.player1 {
+  background: #e3f2fd;
+  color: #1565c0;
+  font-weight: 600;
+}
+.chat-message.player2 {
+  background: #e8f5e9;
+  color: #388e3c;
+  font-weight: 600;
+}
+.chat-message.spectator {
+  background: #f5f5f5;
+  color: #757575;
+  font-style: italic;
+}
+.chat-message .star {
+  margin-right: 6px;
+  font-size: 1.1em;
+  color: #ffb300;
+  filter: drop-shadow(0 1px 2px #fff8);
 }
 
 /* Classes utilitárias para Animate.css */

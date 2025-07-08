@@ -22,13 +22,16 @@
       <option value="ru">Русский</option>
     </select>
   </div>
+  <div style="width:100%;display:flex;justify-content:center;margin-top:18px;">
+    <img src="logo.svg" alt="Private CHESS Logo" style="height:48px; margin-bottom:12px;">
+  </div>
   <h1>Private CHESS</h1>
   <div id="privacy-banner" style="background:#222;color:#fff;padding:12px 0;font-size:1.1em;border-bottom:2px solid #444;">
     🔒 Private CHESS: Este jogo é seguro, privado e não coletamos nenhum dado dos jogadores.
   </div>
   <div id="private-room-controls">
     <button id="createRoomBtn">Criar sala privada</button>
-    <input id="roomCodeInput" type="text" maxlength="6" placeholder="Código da sala" style="width:120px;display:inline-block;">
+    <input id="roomCodeInput" type="text" maxlength="6" placeholder="Código da sala">
     <button id="joinRoomBtn">Entrar em sala</button>
     <div id="roomCodeDisplay" style="margin-top:10px;font-size:1.1em;color:#6f6;display:none;"></div>
   </div>
@@ -59,7 +62,7 @@
       </div>
  <div id="chat">
         <h3>Chat</h3>
-        <div id="chat-messages" style="height:120px;overflow-y:auto;background:#222;padding:6px 4px 6px 8px;border-radius:5px;font-size:1em;margin-bottom:8px;"></div>
+        <div id="chat-messages"></div>
         <form id="chat-form">
           <input id="chat-input" type="text" maxlength="120" placeholder="Digite sua mensagem...">
           <button type="submit">Enviar</button>

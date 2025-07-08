@@ -208,7 +208,7 @@ socket.on('opponentDisconnected', ({ timeout }) => {
   waitingTimer.id = 'waiting-timer';
   waitingTimer.style.fontSize = '1.3em';
   waitingTimer.style.margin = '18px 0 0 0';
-  waitingTimer.style.color = '#ff0';
+  waitingTimer.style.color = '#e53935';
   waitingTimer.textContent = `${t('waiting_victory')} ${remaining}s`;
   statusDiv.appendChild(waitingTimer);
   let interval = setInterval(() => {
@@ -402,8 +402,27 @@ showGameInfo(false); // Esconde ao carregar
 
 function addChatMessage({ name, text, type, senderId }) {
   const msgDiv = document.createElement('div');
-  msgDiv.textContent = `${name}: ${text}`;
-  msgDiv.className = 'animate__animated animate__fadeIn';
+  msgDiv.className = 'chat-message animate__animated animate__fadeIn';
+  // Definir classe e estrela para jogadores
+  if (type === 'player') {
+    if (name === myChatName) {
+      msgDiv.classList.add('player1');
+    } else {
+      msgDiv.classList.add('player2');
+    }
+    const star = document.createElement('span');
+    star.className = 'star';
+    star.textContent = '⭐';
+    msgDiv.appendChild(star);
+  } else {
+    msgDiv.classList.add('spectator');
+  }
+  const nameSpan = document.createElement('span');
+  nameSpan.textContent = name + ': ';
+  msgDiv.appendChild(nameSpan);
+  const textSpan = document.createElement('span');
+  textSpan.textContent = text;
+  msgDiv.appendChild(textSpan);
   chatMessages.appendChild(msgDiv);
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
