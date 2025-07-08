@@ -9,13 +9,13 @@
 - Board snapshot export as PNG with watermark and move list.
 - No game or snapshot data stored on the server.
 - Responsive, mobile-first layout and PWA support.
+- Sound effects and notification.
 
 ## Possible Future Features
 - Spectator mode (watch games in progress)
 - Post-game analysis and move suggestions
 - Local ranking/leaderboard
 - Custom board and piece themes
-- Sound effects and notifications
 - Accessibility improvements
 - More languages
 - Game rematch button
