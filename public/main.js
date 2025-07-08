@@ -47,6 +47,43 @@ timersDiv.style.display = 'none';
 const chatDiv = document.getElementById('chat');
 chatDiv.style.display = 'none';
 
+const manifestoBtn = document.getElementById('manifestoBtn');
+const manifestoContainer = document.getElementById('manifesto-container');
+const manifestoTitle = document.getElementById('manifesto-title');
+const manifestoText = document.getElementById('manifesto-text');
+const manifestoLogoLink = document.getElementById('manifesto-logo-link');
+const mainContent = [
+  document.querySelector('h1'),
+  document.getElementById('privacy-banner'),
+  document.getElementById('private-room-controls'),
+  document.getElementById('status'),
+  document.getElementById('startBtn'),
+  document.getElementById('resignBtn'),
+  document.getElementById('game-area'),
+  document.getElementById('victory-overlay'),
+  document.getElementById('exportModal'),
+  document.querySelector('footer')
+];
+
+function showManifesto(show) {
+  if (show) {
+    // Remover assinatura e nome do texto do manifesto
+    let text = t('manifesto_text').replace(/\n?PrivateChess\.org\n—? ?Pablo Murad|\n?PrivateChess\.org\n—? ?Пабло Мурад|\n?PrivateChess\.org\n—? ?Pablo Murad/gi, '').trim();
+    manifestoTitle.textContent = t('manifesto_title');
+    manifestoText.textContent = text;
+    manifestoContainer.style.display = '';
+    document.getElementById('manifesto-signature').style.display = '';
+    mainContent.forEach(e => { if(e) e.style.display = 'none'; });
+  } else {
+    manifestoContainer.style.display = 'none';
+    document.getElementById('manifesto-signature').style.display = 'none';
+    mainContent.forEach(e => { if(e) e.style.display = ''; });
+  }
+}
+
+manifestoBtn.onclick = () => showManifesto(true);
+manifestoLogoLink.onclick = (e) => { e.preventDefault(); showManifesto(false); };
+
 startBtn.onclick = () => {
   socket.emit('joinGame');
   startBtn.disabled = true;
@@ -544,7 +581,7 @@ function clearRoomSession() {
 }
 socket.on('resigned', clearRoomSession);
 socket.on('gameOver', clearRoomSession);
-socket.on('opponentLeft', clearRoomSession); 
+socket.on('opponentLeft', clearRoomSession()); 
 
 let translations = {};
 let currentLang = localStorage.getItem('privatechess_lang') || 'pt';
@@ -561,25 +598,23 @@ function t(key, vars) {
 
 function applyTranslations() {
   document.title = t('title');
-  document.getElementById('privacy-banner').textContent = t('privacy_banner');
-  document.getElementById('createRoomBtn').textContent = t('create_room');
-  document.getElementById('joinRoomBtn').textContent = t('join_room');
-  document.getElementById('roomCodeInput').placeholder = t('room_code_placeholder');
-  document.getElementById('startBtn').textContent = t('start_game');
-  document.getElementById('resignBtn').textContent = t('resign');
-  document.querySelector('#history h3').textContent = t('move_history');
-  document.getElementById('snapshotBtn').textContent = t('download_png');
-  document.querySelector('#stats h3').textContent = t('stats');
-  document.getElementById('move-count').previousSibling.textContent = t('moves') + ' ';
-  document.getElementById('capture-count').previousSibling.textContent = t('captures') + ' ';
-  document.getElementById('check-count').previousSibling.textContent = t('checks') + ' ';
-  document.querySelector('#chat h3').textContent = t('chat');
-  document.querySelector('#chat-form button').textContent = t('send');
-  document.getElementById('lang-select').options[0].textContent = t('portuguese');
-  document.getElementById('lang-select').options[1].textContent = t('english');
-  document.getElementById('lang-select').options[2].textContent = t('russian');
-  // Atualizar rodapé
-  document.getElementById('footer-text').textContent = t('footer', { year: new Date().getFullYear() });
+  var el;
+  el = document.getElementById('privacy-banner'); if (el) el.textContent = t('privacy_banner');
+  el = document.getElementById('createRoomBtn'); if (el) el.textContent = t('create_room');
+  el = document.getElementById('joinRoomBtn'); if (el) el.textContent = t('join_room');
+  el = document.getElementById('roomCodeInput'); if (el) el.placeholder = t('room_code_placeholder');
+  el = document.getElementById('startBtn'); if (el) el.textContent = t('start_game');
+  el = document.getElementById('resignBtn'); if (el) el.textContent = t('resign');
+  el = document.querySelector('#history h3'); if (el) el.textContent = t('move_history');
+  el = document.getElementById('snapshotBtn'); if (el) el.textContent = t('download_png');
+  el = document.querySelector('#stats h3'); if (el) el.textContent = t('stats');
+  el = document.getElementById('move-count'); if (el && el.previousSibling) el.previousSibling.textContent = t('moves') + ' ';
+  el = document.getElementById('capture-count'); if (el && el.previousSibling) el.previousSibling.textContent = t('captures') + ' ';
+  el = document.getElementById('check-count'); if (el && el.previousSibling) el.previousSibling.textContent = t('checks') + ' ';
+  el = document.querySelector('#chat h3'); if (el) el.textContent = t('chat');
+  el = document.querySelector('#chat-form button'); if (el) el.textContent = t('send');
+  // Removido: opções do seletor de idioma
+  el = document.getElementById('footer-text'); if (el) el.textContent = t('footer', { year: new Date().getFullYear() });
 }
 
 function loadLang(lang) {
@@ -589,17 +624,47 @@ function loadLang(lang) {
       translations = data;
       currentLang = lang;
       localStorage.setItem('privatechess_lang', lang);
-      document.getElementById('lang-select').value = lang;
+      // Removido: document.getElementById('lang-select').value = lang;
       applyTranslations();
     });
 }
 
-document.getElementById('lang-select').addEventListener('change', e => {
-  loadLang(e.target.value);
+window.addEventListener('DOMContentLoaded', () => {
+  const langModal = document.getElementById('language-modal');
+  const flagBtns = document.querySelectorAll('.lang-flag-btn');
+  let chosenLang = localStorage.getItem('privatechess_lang');
+  if (!chosenLang) {
+    langModal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    flagBtns.forEach(btn => {
+      btn.onclick = () => {
+        const lang = btn.getAttribute('data-lang');
+        localStorage.setItem('privatechess_lang', lang);
+        loadLang(lang);
+        langModal.style.display = 'none';
+        document.body.style.overflow = '';
+      };
+    });
+  } else {
+    loadLang(chosenLang);
+    langModal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
 });
 
+// Atualizar manifesto ao trocar idioma
+const originalLoadLang = loadLang;
+loadLang = function(lang) {
+  originalLoadLang(lang);
+  if (manifestoContainer.style.display !== 'none') {
+    manifestoTitle.textContent = t('manifesto_title');
+    manifestoText.textContent = t('manifesto_text');
+  }
+  localStorage.setItem('privatechess_lang', lang);
+};
+
 // Carregar idioma inicial
-loadLang(currentLang);
+// Remover chamada automática de loadLang(currentLang) no final do arquivo
 
 // Ajuste para evitar barras de rolagem desnecessárias
 // Garante que body e html ocupem 100% e não tenham overflow

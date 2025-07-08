@@ -2,10 +2,14 @@
 
 [![License: MIT NC](https://img.shields.io/badge/license-MIT--NC-blue.svg)](LICENSE.md)
 ![Status: Active](https://img.shields.io/badge/status-active-brightgreen)
-![Docker Ready](https://img.shields.io/badge/docker-ready-blue)
-![Languages: PT%20EN%20RU](https://img.shields.io/badge/languages-PT%20%7C%20EN%20%7C%20RU-yellow)
+![Node.js](https://img.shields.io/badge/Node.js-18%2B-green?logo=node.js)
+![Express](https://img.shields.io/badge/Express.js-Backend-black?logo=express)
+![Socket.IO](https://img.shields.io/badge/Socket.IO-Realtime-black?logo=socket.io)
+![Docker](https://img.shields.io/badge/Docker-ready-blue?logo=docker)
+![PWA](https://img.shields.io/badge/PWA-ready-blueviolet?logo=pwa)
+![Languages: PT|EN|RU](https://img.shields.io/badge/languages-PT%20%7C%20EN%20%7C%20RU-yellow)
 
-**Live demo:** [https://privatechess.1208.pro](https://privatechess.1208.pro)
+**Live demo:** [https://privatechess.org](https://privatechess.org)
 
 Private CHESS is a secure, anonymous, and privacy-focused online chess game for two players. It features automatic color pairing, private rooms, anonymous chat, move timer, game history, statistics, and a modern web interface. The project is mobile-first, PWA-ready, and supports multilingual UI (Portuguese, English, Russian).
 

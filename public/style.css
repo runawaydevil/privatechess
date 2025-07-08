@@ -259,15 +259,6 @@ select {
   margin-left: 6px;
 }
 
-.language-selector-container {
-  width: 100%;
-  text-align: right;
-  padding: 8px 16px 0 0;
-}
-.language-selector-container label {
-  font-weight: bold;
-}
-
 #privacy-banner {
   background: var(--accent-dark);
   color: var(--text-light);

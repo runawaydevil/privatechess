@@ -14,16 +14,26 @@
   </style>
 </head>
 <body>
-  <div class="language-selector-container">
-    <label for="lang-select" style="font-weight:bold;">Idioma:</label>
-    <select id="lang-select" style="font-size:1em;padding:2px 8px;">
-      <option value="pt">Português</option>
-      <option value="en">English</option>
-      <option value="ru">Русский</option>
-    </select>
+  <div class="language-selector-container" style="display:flex;align-items:center;gap:16px;">
+    <button id="manifestoBtn" style="font-size:1em;padding:2px 12px;cursor:pointer;">Manifesto</button>
+  </div>
+  <div id="manifesto-container" style="display:none;max-width:700px;margin:32px auto 0 auto;padding:32px 24px 24px 24px;background:#fff;border-radius:18px;box-shadow:0 2px 16px #0002;">
+    <div style="width:100%;display:flex;justify-content:center;margin-bottom:18px;">
+      <a href="#" id="manifesto-logo-link">
+        <img src="logo.svg" alt="Private CHESS Logo" style="height:64px;">
+      </a>
+    </div>
+    <h2 id="manifesto-title" style="text-align:center;margin-bottom:24px;"></h2>
+    <pre id="manifesto-text" style="white-space:pre-wrap;font-size:1.1em;line-height:1.6;text-align:center;background:none;border:none;"></pre>
+    <div id="manifesto-signature" style="text-align:center;margin-top:24px;display:none;">
+      <img src="sig.png" alt="Assinatura" style="height:48px;display:block;margin:0 auto 8px auto;">
+      <span id="manifesto-author" style="font-size:1.1em;font-weight:bold;">Pablo Murad</span>
+    </div>
   </div>
   <div style="width:100%;display:flex;justify-content:center;margin-top:18px;">
-    <img src="logo.svg" alt="Private CHESS Logo" style="height:48px; margin-bottom:12px;">
+    <a href="https://privatechess.org" target="_blank" rel="noopener noreferrer">
+      <img src="logo.svg" alt="Private CHESS Logo" style="height:48px; margin-bottom:12px;">
+    </a>
   </div>
   <h1>Private CHESS</h1>
   <div id="privacy-banner" style="background:#222;color:#fff;padding:12px 0;font-size:1.1em;border-bottom:2px solid #444;">
@@ -80,6 +90,22 @@
  <button onclick="copyExportText()" id="copyExportBtn" style="display:none;">Copiar</button>
  <button onclick="closeExportModal()">Fechar</button>
  <a id="downloadExportBtn" style="display:none;" download>Baixar</a>
+    </div>
+  </div>
+  <div id="language-modal" style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;">
+    <div style="background:#fff;padding:36px 32px 28px 32px;border-radius:18px;box-shadow:0 2px 24px #0006;display:flex;flex-direction:column;align-items:center;">
+      <div style="font-size:1.3em;font-weight:bold;margin-bottom:18px;color:#222;">Selecione o idioma</div>
+      <div style="display:flex;gap:32px;">
+        <button class="lang-flag-btn" data-lang="pt" style="background:none;border:none;cursor:pointer;padding:0;outline:none;">
+          <img src="https://cdn.jsdelivr.net/gh/hjnilsson/country-flags/svg/br.svg" alt="Português" style="width:56px;height:56px;border-radius:50%;box-shadow:0 2px 8px #0002;">
+        </button>
+        <button class="lang-flag-btn" data-lang="en" style="background:none;border:none;cursor:pointer;padding:0;outline:none;">
+          <img src="https://cdn.jsdelivr.net/gh/hjnilsson/country-flags/svg/us.svg" alt="English" style="width:56px;height:56px;border-radius:50%;box-shadow:0 2px 8px #0002;">
+        </button>
+        <button class="lang-flag-btn" data-lang="ru" style="background:none;border:none;cursor:pointer;padding:0;outline:none;">
+          <img src="https://cdn.jsdelivr.net/gh/hjnilsson/country-flags/svg/ru.svg" alt="Русский" style="width:56px;height:56px;border-radius:50%;box-shadow:0 2px 8px #0002;">
+        </button>
+      </div>
     </div>
   </div>
   <script src="/socket.io/socket.io.js"></script>
