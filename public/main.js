@@ -44,6 +44,9 @@ let lastSnapshotCanvas = null;
 const timersDiv = document.getElementById('timers');
 timersDiv.style.display = 'none';
 
+const chatDiv = document.getElementById('chat');
+chatDiv.style.display = 'none';
+
 startBtn.onclick = () => {
   socket.emit('joinGame');
   startBtn.disabled = true;
@@ -340,6 +343,7 @@ function updateHistoryAndStats() {
 function showGameInfo(show) {
   historyDiv.style.display = show ? '' : 'none';
   statsDiv.style.display = show ? '' : 'none';
+  chatDiv.style.display = show ? '' : 'none';
 }
 
 function showVictoryOverlay(show, msg) {
