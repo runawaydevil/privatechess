@@ -88,10 +88,18 @@ startBtn.onclick = () => {
   socket.emit('joinGame');
   startBtn.disabled = true;
   statusDiv.textContent = t('waiting_for_opponent');
+  
+  // Ocultar footer quando aguardando jogo
+  const footer = document.querySelector('footer');
+  if (footer) footer.style.display = 'none';
 };
 
 socket.on('waiting', () => {
   statusDiv.textContent = t('waiting_for_opponent');
+  
+  // Ocultar footer quando aguardando
+  const footer = document.querySelector('footer');
+  if (footer) footer.style.display = 'none';
 });
 
 createRoomBtn.onclick = () => {
@@ -99,6 +107,10 @@ createRoomBtn.onclick = () => {
   socket.emit('createRoom');
   // Não desabilitar botões ainda
   statusDiv.textContent = t('waiting_for_opponent_to_join');
+  
+  // Ocultar footer quando aguardando jogo
+  const footer = document.querySelector('footer');
+  if (footer) footer.style.display = 'none';
 };
 
 // Recebe o código da sala criada
@@ -121,6 +133,10 @@ joinRoomBtn.onclick = () => {
     joinRoomBtn.disabled = true;
     startBtn.disabled = true;
     statusDiv.textContent = t('trying_to_join_room');
+    
+    // Ocultar footer quando tentando entrar em sala
+    const footer = document.querySelector('footer');
+    if (footer) footer.style.display = 'none';
   } else {
     statusDiv.textContent = t('enter_6_char_code');
   }
@@ -133,6 +149,9 @@ socket.on('roomError', ({ message }) => {
   joinRoomBtn.disabled = false;
   startBtn.disabled = false;
   roomCodeDisplay.style.display = 'none';
+  
+  // Mostrar footer novamente em caso de erro
+  showFooter();
 });
 
 socket.on('gameStart', (data) => {
@@ -170,6 +189,10 @@ socket.on('gameStart', (data) => {
   timersDiv.style.display = '';
   sessionStorage.setItem('privatechess_room', data.roomId);
   sessionStorage.setItem('privatechess_color', data.color);
+  
+  // Ocultar footer durante o jogo
+  const footer = document.querySelector('footer');
+  if (footer) footer.style.display = 'none';
 });
 
 socket.on('move', (data) => {
@@ -220,6 +243,7 @@ socket.on('gameOver', (data) => {
   }
   timersDiv.style.display = 'none';
   clearRoomSession();
+  showFooter(); // Mostrar footer novamente
 });
 
 socket.on('opponentLeft', () => {
@@ -232,6 +256,7 @@ socket.on('opponentLeft', () => {
   resignBtn.style.display = 'none';
   timersDiv.style.display = 'none';
   clearRoomSession();
+  showFooter(); // Mostrar footer novamente
 });
 
 socket.on('opponentDisconnected', ({ timeout }) => {
@@ -259,6 +284,8 @@ socket.on('opponentDisconnected', ({ timeout }) => {
   // Guardar para limpar depois
   window._waitingReconnectInterval = interval;
   window._waitingReconnectDiv = waitingTimer;
+  
+  // Manter footer oculto durante desconexão (jogo ainda está ativo)
 });
 
 socket.on('opponentReconnected', () => {
@@ -270,6 +297,10 @@ socket.on('opponentReconnected', () => {
     showGameInfo(true);
     timersDiv.style.display = '';
     resignBtn.style.display = '';
+    
+    // Ocultar footer novamente quando o jogo recomeça
+    const footer = document.querySelector('footer');
+    if (footer) footer.style.display = 'none';
   }, 1200);
 });
 
@@ -287,6 +318,7 @@ socket.on('resigned', (data) => {
   showGameInfo(false);
   timersDiv.style.display = 'none';
   clearRoomSession();
+  showFooter(); // Mostrar footer novamente
 });
 
 resignBtn.onclick = () => {
@@ -574,10 +606,17 @@ socket.on('gameStart', (data) => {
   sessionStorage.setItem('privatechess_room', data.roomId);
   sessionStorage.setItem('privatechess_color', data.color);
 });
+// Função para mostrar o footer
+function showFooter() {
+  const footer = document.querySelector('footer');
+  if (footer) footer.style.display = '';
+}
+
 // Limpar ao fim do jogo
 function clearRoomSession() {
   sessionStorage.removeItem('privatechess_room');
   sessionStorage.removeItem('privatechess_color');
+  showFooter(); // Mostrar footer novamente
 }
 socket.on('resigned', clearRoomSession);
 socket.on('gameOver', clearRoomSession);
