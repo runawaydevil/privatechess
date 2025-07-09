@@ -665,30 +665,71 @@ function loadLang(lang) {
       localStorage.setItem('privatechess_lang', lang);
       // Removido: document.getElementById('lang-select').value = lang;
       applyTranslations();
+      
+      // Update SEO for the selected language
+      if (window.updateSEO) {
+        window.updateSEO(lang);
+      }
     });
+}
+
+function detectBrowserLanguage() {
+  // Check URL parameter first
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlLang = urlParams.get('lang');
+  if (urlLang && ['pt', 'en', 'ru'].includes(urlLang)) {
+    return urlLang;
+  }
+  
+  const browserLang = navigator.language || navigator.userLanguage;
+  const supportedLangs = ['pt', 'en', 'ru'];
+  
+  // Check for exact match
+  if (supportedLangs.includes(browserLang)) {
+    return browserLang;
+  }
+  
+  // Check for language prefix
+  const langPrefix = browserLang.split('-')[0];
+  if (supportedLangs.includes(langPrefix)) {
+    return langPrefix;
+  }
+  
+  // Default to Portuguese
+  return 'pt';
 }
 
 window.addEventListener('DOMContentLoaded', () => {
   const langModal = document.getElementById('language-modal');
   const flagBtns = document.querySelectorAll('.lang-flag-btn');
   let chosenLang = localStorage.getItem('privatechess_lang');
+  
   if (!chosenLang) {
-    langModal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-    flagBtns.forEach(btn => {
-      btn.onclick = () => {
-        const lang = btn.getAttribute('data-lang');
-        localStorage.setItem('privatechess_lang', lang);
-        loadLang(lang);
-        langModal.style.display = 'none';
-        document.body.style.overflow = '';
-      };
-    });
-  } else {
-    loadLang(chosenLang);
-    langModal.style.display = 'none';
-    document.body.style.overflow = '';
+    // Auto-detect browser language
+    chosenLang = detectBrowserLanguage();
+    localStorage.setItem('privatechess_lang', chosenLang);
   }
+  
+  // Load the language
+  loadLang(chosenLang);
+  langModal.style.display = 'none';
+  document.body.style.overflow = '';
+  
+  // Set up language selection buttons
+  flagBtns.forEach(btn => {
+    btn.onclick = () => {
+      const lang = btn.getAttribute('data-lang');
+      localStorage.setItem('privatechess_lang', lang);
+      loadLang(lang);
+      langModal.style.display = 'none';
+      document.body.style.overflow = '';
+      
+      // Update URL with language parameter
+      const url = new URL(window.location);
+      url.searchParams.set('lang', lang);
+      window.history.replaceState({}, '', url);
+    };
+  });
 });
 
 // Atualizar manifesto ao trocar idioma

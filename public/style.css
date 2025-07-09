@@ -25,6 +25,17 @@ body {
   transition: background var(--transition);
 }
 
+.hero-section {
+  margin: 20px 0 30px 0;
+}
+
+.hero-description {
+  font-size: 1.2em;
+  color: var(--accent-dark);
+  margin: 16px 0;
+  font-weight: 500;
+}
+
 #game-area {
   display: flex;
   justify-content: center;
@@ -211,14 +222,56 @@ footer {
   width: 100%;
   background: var(--accent-dark);
   color: var(--text-light);
-  padding: 8px 0;
-  text-align: center;
-  font-size: 0.95em;
   z-index: 100;
-  height: 40px;
-  line-height: 24px;
   box-shadow: 0 -2px 8px #0002;
   transition: background var(--transition);
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  padding: 20px 16px 16px 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 32px;
+}
+
+.footer-section {
+  flex: 1;
+  min-width: 200px;
+}
+
+.footer-section h4 {
+  margin: 0 0 12px 0;
+  font-size: 1.1em;
+  color: var(--text-light);
+}
+
+.footer-section p {
+  margin: 8px 0;
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0;
+}
+
+.footer-section li {
+  margin: 4px 0;
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.2);
+  padding: 12px 0;
+  text-align: center;
+  font-size: 0.9em;
+  background: rgba(0,0,0,0.1);
 }
 .game-board-container {
   /* min-width: 220px; Removido, o min-width será tratado pelo tabuleiro */
@@ -290,15 +343,32 @@ select {
   #timers { font-size: 1em; }
   #history, #stats, #chat { max-width: 98vw; min-width: unset; }
   #chat-messages { height: 80px; font-size: 0.95em; }
-  body { padding-bottom: 50px; }
-  footer { height: 50px; padding: 12px 0; }
+  body { padding-bottom: 200px; }
+  .footer-content { 
+    flex-direction: column; 
+    gap: 20px; 
+    padding: 16px; 
+  }
+  .footer-section { 
+    min-width: unset; 
+    text-align: center; 
+  }
 }
 
 /* Para telas muito pequenas */
 @media (max-width: 480px) {
   #game-area { margin-bottom: 40px; }
-  body { padding-bottom: 60px; }
-  footer { height: 60px; padding: 16px 0; }
+  body { padding-bottom: 250px; }
+  .footer-content { 
+    padding: 12px; 
+    gap: 16px; 
+  }
+  .footer-section h4 { 
+    font-size: 1em; 
+  }
+  .footer-section p, .footer-section li { 
+    font-size: 0.85em; 
+  }
 }
 
 #chat-messages {

@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://privatechess.org/sitemap.xml
+Sitemap: https://privatechess.org/sitemap-pt.xml
+Sitemap: https://privatechess.org/sitemap-en.xml
+Sitemap: https://privatechess.org/sitemap-ru.xml
+
+# Crawl-delay para ser respeitoso com o servidor
+Crawl-delay: 1 

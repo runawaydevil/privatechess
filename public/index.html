@@ -3,7 +3,93 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Private CHESS</title>
+  
+  <!-- SEO Meta Tags - Dynamic based on language -->
+  <title id="seo-title">Private CHESS - Jogo de Xadrez Online Seguro e Privado</title>
+  <meta name="description" id="seo-description" content="Jogue xadrez online de forma segura e privada. Sem cadastro, sem dados salvos. Jogo de xadrez anônimo com chat privado e salas personalizadas. Disponível em português, inglês e russo.">
+  <meta name="keywords" id="seo-keywords" content="xadrez online, jogo de xadrez, xadrez privado, xadrez seguro, xadrez anônimo, chess online, private chess, jogo de tabuleiro online">
+  <meta name="author" content="Pablo Murad">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="pt-BR">
+  <meta name="revisit-after" content="7 days">
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://privatechess.org">
+  
+  <!-- Alternative Languages -->
+  <link rel="alternate" hreflang="pt-BR" href="https://privatechess.org">
+  <link rel="alternate" hreflang="en-US" href="https://privatechess.org">
+  <link rel="alternate" hreflang="ru-RU" href="https://privatechess.org">
+  <link rel="alternate" hreflang="x-default" href="https://privatechess.org">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://privatechess.org">
+  <meta property="og:title" id="og-title" content="Private CHESS - Jogo de Xadrez Online Seguro e Privado">
+  <meta property="og:description" id="og-description" content="Jogue xadrez online de forma segura e privada. Sem cadastro, sem dados salvos. Jogo de xadrez anônimo com chat privado e salas personalizadas.">
+  <meta property="og:image" content="https://privatechess.org/logo.svg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="Private CHESS">
+  <meta property="og:locale" id="og-locale" content="pt_BR">
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://privatechess.org">
+  <meta property="twitter:title" id="twitter-title" content="Private CHESS - Jogo de Xadrez Online Seguro e Privado">
+  <meta property="twitter:description" id="twitter-description" content="Jogue xadrez online de forma segura e privada. Sem cadastro, sem dados salvos. Jogo de xadrez anônimo com chat privado e salas personalizadas.">
+  <meta property="twitter:image" content="https://privatechess.org/logo.svg">
+  
+  <!-- Additional SEO Meta Tags -->
+  <meta name="theme-color" content="#3a8bb7">
+  <meta name="msapplication-TileColor" content="#3a8bb7">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Private CHESS">
+  <meta name="application-name" content="Private CHESS">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-config" content="none">
+  
+  <!-- Structured Data / JSON-LD - Dynamic based on language -->
+  <script type="application/ld+json" id="structured-data">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Private CHESS",
+    "description": "Jogo de xadrez online seguro e privado, sem necessidade de cadastro ou coleta de dados pessoais.",
+    "url": "https://privatechess.org",
+    "applicationCategory": "Game",
+    "operatingSystem": "Web Browser",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Person",
+      "name": "Pablo Murad"
+    },
+    "creator": {
+      "@type": "Person",
+      "name": "Pablo Murad"
+    },
+    "inLanguage": ["pt-BR", "en-US", "ru-RU"],
+    "featureList": [
+      "Jogo de xadrez online",
+      "Privacidade total",
+      "Sem cadastro",
+      "Chat anônimo",
+      "Salas privadas",
+      "Múltiplos idiomas"
+    ]
+  }
+  </script>
+  <!-- Preload critical resources -->
+  <link rel="preload" href="style.css" as="style">
+  <link rel="preload" href="main.js" as="script">
+  <link rel="preload" href="logo.svg" as="image">
+  
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,100 +100,112 @@
   </style>
 </head>
 <body>
-  <div class="language-selector-container" style="display:flex;align-items:center;gap:16px;">
-    <button id="manifestoBtn" style="font-size:1em;padding:2px 12px;cursor:pointer;">Manifesto</button>
-  </div>
-  <div id="manifesto-container" style="display:none;max-width:700px;margin:32px auto 0 auto;padding:32px 24px 24px 24px;background:#fff;border-radius:18px;box-shadow:0 2px 16px #0002;">
-    <div style="width:100%;display:flex;justify-content:center;margin-bottom:18px;">
-      <a href="#" id="manifesto-logo-link">
-        <img src="logo.svg" alt="Private CHESS Logo" style="height:64px;">
-      </a>
-    </div>
-    <h2 id="manifesto-title" style="text-align:center;margin-bottom:24px;"></h2>
-    <pre id="manifesto-text" style="white-space:pre-wrap;font-size:1.1em;line-height:1.6;text-align:center;background:none;border:none;"></pre>
-    <div id="manifesto-signature" style="text-align:center;margin-top:24px;display:none;">
-      <img src="sig.png" alt="Assinatura" style="height:48px;display:block;margin:0 auto 8px auto;">
-      <span id="manifesto-author" style="font-size:1.1em;font-weight:bold;">Pablo Murad</span>
-    </div>
-  </div>
-  <div style="width:100%;display:flex;justify-content:center;margin-top:18px;">
-    <a href="https://privatechess.org" target="_blank" rel="noopener noreferrer">
-      <img src="logo.svg" alt="Private CHESS Logo" style="height:48px; margin-bottom:12px;">
-    </a>
-  </div>
-  <h1>Private CHESS</h1>
-  <div id="privacy-banner" style="background:#222;color:#fff;padding:12px 0;font-size:1.1em;border-bottom:2px solid #444;">
-    🔒 Private CHESS: Este jogo é seguro, privado e não coletamos nenhum dado dos jogadores.
-  </div>
-  <div id="private-room-controls">
-    <button id="createRoomBtn">Criar sala privada</button>
-    <input id="roomCodeInput" type="text" maxlength="6" placeholder="Código da sala">
-    <button id="joinRoomBtn">Entrar em sala</button>
-    <div id="roomCodeDisplay" style="margin-top:10px;font-size:1.1em;color:#6f6;display:none;"></div>
-  </div>
-  <div id="status">Clique em "Iniciar jogo" para jogar contra outro jogador.</div>
-  <button id="startBtn">Iniciar jogo</button>
-  <button id="resignBtn" style="display: none;">Desistir</button>
-  <div id="game-area">
-    <div class="game-board-container">
- <div id="timers">
-        <div>Tempo das brancas: <span id="white-timer">0:00</span></div>
-        <div>Tempo das pretas: <span id="black-timer">0:00</span></div>
+  <header>
+    <nav class="language-selector-container" style="display:flex;align-items:center;gap:16px;">
+      <button id="manifestoBtn" style="font-size:1em;padding:2px 12px;cursor:pointer;">Manifesto</button>
+    </nav>
+  </header>
+
+  <main>
+    <article id="manifesto-container" style="display:none;max-width:700px;margin:32px auto 0 auto;padding:32px 24px 24px 24px;background:#fff;border-radius:18px;box-shadow:0 2px 16px #0002;">
+      <div style="width:100%;display:flex;justify-content:center;margin-bottom:18px;">
+        <a href="#" id="manifesto-logo-link">
+          <img src="logo.svg" alt="Private CHESS Logo" style="height:64px;">
+        </a>
       </div>
-      <div id="chessboard"></div>
-    </div>
-    <div class="game-sidebar">
-      <div id="history">
-        <h3>Histórico de Movimentos</h3>
-        <div style="display:flex;gap:8px;margin-bottom:8px;">
-          <button id="snapshotBtn" style="font-size:0.95em;">Baixar PNG</button>
+      <h2 id="manifesto-title" style="text-align:center;margin-bottom:24px;"></h2>
+      <pre id="manifesto-text" style="white-space:pre-wrap;font-size:1.1em;line-height:1.6;text-align:center;background:none;border:none;"></pre>
+      <footer id="manifesto-signature" style="text-align:center;margin-top:24px;display:none;">
+        <img src="sig.png" alt="Assinatura" style="height:48px;display:block;margin:0 auto 8px auto;">
+        <span id="manifesto-author" style="font-size:1.1em;font-weight:bold;">Pablo Murad</span>
+      </footer>
+    </article>
+
+    <section class="hero-section">
+      <div style="width:100%;display:flex;justify-content:center;margin-top:18px;">
+        <a href="https://privatechess.org" target="_blank" rel="noopener noreferrer">
+          <img src="logo.svg" alt="Private CHESS Logo" style="height:48px; margin-bottom:12px;">
+        </a>
+      </div>
+      <h1>Private CHESS</h1>
+      <p class="hero-description">Jogo de xadrez online seguro, privado e anônimo</p>
+    </section>
+    <aside id="privacy-banner" style="background:#222;color:#fff;padding:12px 0;font-size:1.1em;border-bottom:2px solid #444;">
+      🔒 Private CHESS: Este jogo é seguro, privado e não coletamos nenhum dado dos jogadores.
+    </aside>
+
+    <section class="game-controls">
+      <div id="private-room-controls">
+        <button id="createRoomBtn" aria-label="Criar sala privada para jogo de xadrez">Criar sala privada</button>
+        <input id="roomCodeInput" type="text" maxlength="6" placeholder="Código da sala" aria-label="Digite o código da sala privada">
+        <button id="joinRoomBtn" aria-label="Entrar em sala privada">Entrar em sala</button>
+        <div id="roomCodeDisplay" style="margin-top:10px;font-size:1.1em;color:#6f6;display:none;"></div>
+      </div>
+      <div id="status">Clique em "Iniciar jogo" para jogar contra outro jogador.</div>
+              <button id="startBtn" aria-label="Iniciar jogo de xadrez online">Iniciar jogo</button>
+        <button id="resignBtn" style="display: none;" aria-label="Desistir da partida">Desistir</button>
+    </section>
+    <section id="game-area">
+      <div class="game-board-container">
+        <div id="timers">
+          <div>Tempo das brancas: <span id="white-timer">0:00</span></div>
+          <div>Tempo das pretas: <span id="black-timer">0:00</span></div>
         </div>
-        <ol id="move-list"></ol>
+        <div id="chessboard" role="application" aria-label="Tabuleiro de xadrez"></div>
       </div>
-      <div id="stats" style="margin-top:20px;">
-        <h3>Estatísticas</h3>
-        <div>Lances: <span id="move-count">0</span></div>
-        <div>Capturas: <span id="capture-count">0</span></div>
-        <div>Xeques: <span id="check-count">0</span></div>
-      </div>
- <div id="chat">
-        <h3>Chat</h3>
-        <div id="chat-messages"></div>
-        <form id="chat-form">
-          <input id="chat-input" type="text" maxlength="120" placeholder="Digite sua mensagem...">
-          <button type="submit">Enviar</button>
-        </form>
+      <aside class="game-sidebar">
+        <section id="history">
+          <h3>Histórico de Movimentos</h3>
+          <div style="display:flex;gap:8px;margin-bottom:8px;">
+            <button id="snapshotBtn" style="font-size:0.95em;" aria-label="Baixar imagem do tabuleiro em formato PNG">Baixar PNG</button>
+          </div>
+          <ol id="move-list"></ol>
+        </section>
+        <section id="stats" style="margin-top:20px;">
+          <h3>Estatísticas</h3>
+          <div>Lances: <span id="move-count">0</span></div>
+          <div>Capturas: <span id="capture-count">0</span></div>
+          <div>Xeques: <span id="check-count">0</span></div>
+        </section>
+        <section id="chat">
+          <h3>Chat</h3>
+          <div id="chat-messages"></div>
+                      <form id="chat-form">
+              <input id="chat-input" type="text" maxlength="120" placeholder="Digite sua mensagem..." aria-label="Digite sua mensagem no chat">
+              <button type="submit" aria-label="Enviar mensagem">Enviar</button>
+            </form>
+        </section>
+      </aside>
+    </section>
+    <div id="victory-overlay">
+      <img src="baby.gif" alt="Vitória">
+      <div>VOCÊ VENCEU.</div>
+    </div>
+    <div id="exportModal">
+      <div id="exportContent"></div>
+      <div class="export-modal-buttons">
+        <button onclick="copyExportText()" id="copyExportBtn" style="display:none;" aria-label="Copiar conteúdo">Copiar</button>
+        <button onclick="closeExportModal()" aria-label="Fechar modal">Fechar</button>
+        <a id="downloadExportBtn" style="display:none;" download aria-label="Baixar arquivo">Baixar</a>
       </div>
     </div>
-  </div>
-  <div id="victory-overlay">
-    <img src="baby.gif" alt="Vitória">
-    <div>VOCÊ VENCEU.</div>
-  </div>
-  <div id="exportModal">
-    <div id="exportContent"></div>
-    <div class="export-modal-buttons">
- <button onclick="copyExportText()" id="copyExportBtn" style="display:none;">Copiar</button>
- <button onclick="closeExportModal()">Fechar</button>
- <a id="downloadExportBtn" style="display:none;" download>Baixar</a>
-    </div>
-  </div>
-  <div id="language-modal" style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;">
-    <div style="background:#fff;padding:36px 32px 28px 32px;border-radius:18px;box-shadow:0 2px 24px #0006;display:flex;flex-direction:column;align-items:center;">
-      <div style="font-size:1.3em;font-weight:bold;margin-bottom:18px;color:#222;">Selecione o idioma</div>
-      <div style="display:flex;gap:32px;">
-        <button class="lang-flag-btn" data-lang="pt" style="background:none;border:none;cursor:pointer;padding:0;outline:none;">
-          <img src="https://cdn.jsdelivr.net/gh/hjnilsson/country-flags/svg/br.svg" alt="Português" style="width:56px;height:56px;border-radius:50%;box-shadow:0 2px 8px #0002;">
-        </button>
-        <button class="lang-flag-btn" data-lang="en" style="background:none;border:none;cursor:pointer;padding:0;outline:none;">
-          <img src="https://cdn.jsdelivr.net/gh/hjnilsson/country-flags/svg/us.svg" alt="English" style="width:56px;height:56px;border-radius:50%;box-shadow:0 2px 8px #0002;">
-        </button>
-        <button class="lang-flag-btn" data-lang="ru" style="background:none;border:none;cursor:pointer;padding:0;outline:none;">
-          <img src="https://cdn.jsdelivr.net/gh/hjnilsson/country-flags/svg/ru.svg" alt="Русский" style="width:56px;height:56px;border-radius:50%;box-shadow:0 2px 8px #0002;">
-        </button>
+    <div id="language-modal" style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;">
+      <div style="background:#fff;padding:36px 32px 28px 32px;border-radius:18px;box-shadow:0 2px 24px #0006;display:flex;flex-direction:column;align-items:center;">
+        <div style="font-size:1.3em;font-weight:bold;margin-bottom:18px;color:#222;">Selecione o idioma</div>
+        <div style="display:flex;gap:32px;">
+          <button class="lang-flag-btn" data-lang="pt" style="background:none;border:none;cursor:pointer;padding:0;outline:none;" aria-label="Selecionar idioma português">
+            <img src="https://cdn.jsdelivr.net/gh/hjnilsson/country-flags/svg/br.svg" alt="Português" style="width:56px;height:56px;border-radius:50%;box-shadow:0 2px 8px #0002;">
+          </button>
+          <button class="lang-flag-btn" data-lang="en" style="background:none;border:none;cursor:pointer;padding:0;outline:none;" aria-label="Selecionar idioma inglês">
+            <img src="https://cdn.jsdelivr.net/gh/hjnilsson/country-flags/svg/us.svg" alt="English" style="width:56px;height:56px;border-radius:50%;box-shadow:0 2px 8px #0002;">
+          </button>
+          <button class="lang-flag-btn" data-lang="ru" style="background:none;border:none;cursor:pointer;padding:0;outline:none;" aria-label="Selecionar idioma russo">
+            <img src="https://cdn.jsdelivr.net/gh/hjnilsson/country-flags/svg/ru.svg" alt="Русский" style="width:56px;height:56px;border-radius:50%;box-shadow:0 2px 8px #0002;">
+          </button>
+        </div>
       </div>
     </div>
-  </div>
+  </main>
   <script src="/socket.io/socket.io.js"></script>
   <script src="chess.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -124,11 +222,35 @@
   </script>
   <script src="main.js"></script>
   <footer>
-    <span id="footer-text">Desenvolvido por Pablo Murad - 2025</span>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>Sobre o Private CHESS</h4>
+        <p>Jogo de xadrez online seguro, privado e anônimo. Sem cadastro, sem dados salvos.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Recursos</h4>
+        <ul>
+          <li>Jogo de xadrez online</li>
+          <li>Privacidade total</li>
+          <li>Chat anônimo</li>
+          <li>Salas privadas</li>
+          <li>Múltiplos idiomas</li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Desenvolvedor</h4>
+        <p>Desenvolvido por <strong>Pablo Murad</strong></p>
+        <p>© 2025 Private CHESS. Todos os direitos reservados.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span id="footer-text">Desenvolvido por Pablo Murad - 2025</span>
+    </div>
   </footer>
   <script>
     document.getElementById('ano-atual').textContent = new Date().getFullYear();
   </script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="seo-multilang.js"></script>
 </body>
 </html> 
