@@ -288,6 +288,13 @@ io.on('connection', (socket) => {
     const game = games[roomId];
     if (!game) return;
     const chess = game.chess;
+    // Validação: só o jogador da vez pode jogar
+    const turn = chess.turn(); // 'w' ou 'b'
+    const expectedPlayerId = turn === 'w' ? game.white : game.black;
+    if (socket.id !== expectedPlayerId) {
+      // Ignora movimentos de quem não é o jogador da vez
+      return;
+    }
     const move = chess.move({ from, to, promotion: promotion || 'q' });
     if (move) {
       io.to(roomId).emit('move', { from, to, promotion: move.promotion, fen: chess.fen() });
