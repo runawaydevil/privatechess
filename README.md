@@ -43,7 +43,6 @@ Private CHESS is a secure, anonymous, and privacy-focused online chess game for 
 - **Pattern recognition** - Identifies repetitive and artificial move patterns
 - **Severity classification** - LOW, MEDIUM, HIGH severity levels for violations
 - **Visual notifications** - Color-coded warnings for different violation types
-- **Server-side tracking** - Comprehensive logging and analysis
 - **Automatic reset** - Anti-cheat system resets for each new game
 
 ### Privacy & Security
