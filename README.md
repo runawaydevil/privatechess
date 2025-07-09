@@ -175,6 +175,21 @@ The Private CHESS anti-cheat system monitors gameplay in real-time to ensure fai
 - Anonymous chat with random names
 - Responsive design and PWA capabilities
 
+## Contact & Support
+
+Have questions, suggestions, or need help? Feel free to reach out:
+
+- **Email**: [skullx87@pm.me](mailto:skullx87@pm.me)
+- **Website**: [https://pablo.space](https://pablo.space)
+- **Live Demo**: [https://privatechess.org](https://privatechess.org)
+
+I'm always happy to help with:
+- Installation and deployment issues
+- Feature requests and suggestions
+- Bug reports
+- General questions about the project
+- Collaboration opportunities
+
 ## Credits
 - Chess logic: [chess.js](https://github.com/jhlywa/chess.js)
 - Board UI: [chessboard.js](https://github.com/oakmac/chessboardjs)
