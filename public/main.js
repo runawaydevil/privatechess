@@ -108,7 +108,7 @@ createRoomBtn.onclick = () => {
   console.log('Botão Criar Sala Privada clicado');
   socket.emit('createRoom');
   // Não desabilitar botões ainda
-  statusDiv.textContent = t('waiting_for_opponent_to_join');
+  statusDiv.textContent = t('waiting_for_opponent');
   
   // Ocultar footer quando aguardando jogo
   const footer = document.querySelector('footer');
@@ -118,7 +118,6 @@ createRoomBtn.onclick = () => {
 // Recebe o código da sala criada
 socket.on('roomCreated', ({ code }) => {
   console.log('Código da sala recebido:', code);
-  alert('DEBUG: Evento roomCreated chamado. Código da sala: ' + code);
   roomCodeDisplay.style.display = '';
   roomCodeDisplay.textContent = t('room_code', { code: code });
   roomCodeInput.value = code;
@@ -126,12 +125,12 @@ socket.on('roomCreated', ({ code }) => {
   joinRoomBtn.disabled = true;
   startBtn.disabled = true;
 
-  // Exibir link de convite (forçar exibição para debug)
+  // Exibir link de convite
   const inviteLinkDisplay = document.getElementById('inviteLinkDisplay');
   if (inviteLinkDisplay) {
     const url = `${window.location.origin}${window.location.pathname}?room=${code}`;
     inviteLinkDisplay.innerHTML = `<span>Link de convite: <a href='${url}' target='_blank'>${url}</a> <button id='copyInviteBtn' style='font-size:0.95em;margin-left:6px;'>Copiar</button></span>`;
-    inviteLinkDisplay.style.display = 'block'; // Forçar exibição
+    inviteLinkDisplay.style.display = 'block';
     setTimeout(() => {
       const btn = document.getElementById('copyInviteBtn');
       if (btn) {
@@ -142,8 +141,6 @@ socket.on('roomCreated', ({ code }) => {
         };
       }
     }, 100);
-  } else {
-    alert('DEBUG: inviteLinkDisplay não encontrado no DOM!');
   }
 });
 
