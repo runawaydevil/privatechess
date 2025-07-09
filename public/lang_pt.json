@@ -41,5 +41,10 @@
   "waiting_for_opponent": "Aguardando outro jogador se conectar...",
   "manifesto_title": "Manifesto Private Chess",
   "manifesto_text": "Em um mundo cada vez mais conectado, onde cada clique é registrado e cada passo digital é monitorado, escolhemos seguir por outro caminho.\n\nO Private Chess nasce do desejo de promover o xadrez como espaço de cultura, aprendizado e liberdade — livre de rastreamento, de cadastros e de exposição.\n\nAcreditamos que o xadrez é uma linguagem universal. Ele ultrapassa fronteiras, gêneros, crenças e ideologias. Mas, para que essa linguagem permaneça pura, o ambiente onde é praticada deve respeitar seus jogadores.\n\nPor isso:\n\nNão exigimos login.\n\nNão salvamos seus dados.\n\nNão há perfis, seguidores ou rankings visíveis.\n\nAqui, a única coisa que importa é o jogo.\n\nNo Private Chess, você pode desafiar o mundo ou apenas treinar em silêncio — com a certeza de que sua privacidade está protegida.\n\nJogue. Reflita. Evolua.\nSem exposição. Sem vigilância.\nApenas xadrez.\n\nPrivateChess.org\n— Pablo Murad",
-  "copyright": "© {year} Private CHESS. Todos os direitos reservados."
+  "copyright": "© {year} Private CHESS. Todos os direitos reservados.",
+  "fair_play_warning": "Aviso de fair play: Atividade suspeita detectada",
+  "anti_cheat_detected": "Sistema anti-trapaça detectou atividade suspeita",
+  "fair_play_violation": "Violação de fair play detectada",
+  "engine_use_detected": "Uso de engine detectado",
+  "unusual_patterns": "Padrões incomuns detectados"
 } 

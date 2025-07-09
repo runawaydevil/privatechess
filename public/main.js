@@ -1,4 +1,6 @@
+// Inicializar socket no início do arquivo
 const socket = io();
+
 let board = null;
 let game = null;
 let myColor = null;
@@ -190,6 +192,16 @@ socket.on('gameStart', (data) => {
   sessionStorage.setItem('privatechess_room', data.roomId);
   sessionStorage.setItem('privatechess_color', data.color);
   
+  // Reset anti-cheat for new game
+  antiCheat.reset();
+  moveStartTime = null;
+  
+  // Remove any existing fair play warnings
+  const existingWarning = document.getElementById('fair-play-warning');
+  if (existingWarning) {
+    existingWarning.remove();
+  }
+  
   // Ocultar footer durante o jogo
   const footer = document.querySelector('footer');
   if (footer) footer.style.display = 'none';
@@ -321,6 +333,47 @@ socket.on('resigned', (data) => {
   showFooter(); // Mostrar footer novamente
 });
 
+// Add anti-cheat event handlers
+socket.on('suspiciousActivityReport', (data) => {
+  console.warn('Server reported suspicious activity:', data);
+  
+  if (data.severity === 'HIGH') {
+    statusDiv.textContent = t('fair_play_warning') || 'Fair play warning: Suspicious activity detected';
+    statusDiv.style.color = '#ff6b6b';
+    
+    // Reset color after 5 seconds
+    setTimeout(() => {
+      statusDiv.style.color = '';
+      updateStatus();
+    }, 5000);
+  }
+});
+
+socket.on('fairPlayViolation', (data) => {
+  console.warn('Fair play violation detected:', data);
+  statusDiv.textContent = t('fair_play_violation') || 'Fair play violation detected';
+  statusDiv.style.color = '#ff4757';
+  
+  // Show persistent warning
+  const warningDiv = document.createElement('div');
+  warningDiv.id = 'fair-play-warning';
+  warningDiv.style.cssText = `
+    background: #ff4757;
+    color: white;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+  `;
+  warningDiv.textContent = t('anti_cheat_detected') || 'Anti-cheat system detected suspicious activity';
+  
+  const gameArea = document.getElementById('game-area');
+  if (gameArea) {
+    gameArea.insertBefore(warningDiv, gameArea.firstChild);
+  }
+});
+
 resignBtn.onclick = () => {
   console.log('Botão desistir clicado, roomId:', roomId);
   if (roomId) {
@@ -329,17 +382,200 @@ resignBtn.onclick = () => {
   }
 };
 
+// Anti-Cheat System
+class AntiCheatSystem {
+  constructor() {
+    this.suspiciousPatterns = [];
+    this.playerStats = {
+      moveTimes: [],
+      accuracy: [],
+      engineMoves: 0,
+      suspiciousMoves: 0,
+      averageMoveTime: 0,
+      consistencyScore: 0
+    };
+    this.engineMoves = new Set([
+      // Moves that are commonly played by engines
+      'e4', 'd4', 'Nf3', 'c4', 'g3', 'b3', 'e3', 'd3',
+      'Nc3', 'Bc4', 'Bd3', 'Be2', 'O-O', 'O-O-O', 'h3', 'a3'
+    ]);
+    this.suspiciousThresholds = {
+      moveTime: 2000, // 2 seconds for suspiciously fast moves
+      accuracy: 0.95, // 95% accuracy is suspicious
+      consistency: 0.8, // 80% consistency is suspicious
+      engineMoveRatio: 0.7 // 70% engine moves is suspicious
+    };
+  }
+
+  analyzeMoveTime(moveTime) {
+    this.playerStats.moveTimes.push(moveTime);
+    
+    const totalTime = this.playerStats.moveTimes.reduce((sum, time) => sum + time, 0);
+    this.playerStats.averageMoveTime = totalTime / this.playerStats.moveTimes.length;
+    
+    const suspiciousMoves = this.playerStats.moveTimes.filter(time => 
+      time < this.suspiciousThresholds.moveTime
+    ).length;
+    
+    const suspiciousRatio = suspiciousMoves / this.playerStats.moveTimes.length;
+    
+    if (suspiciousRatio > 0.3) {
+      this.flagSuspiciousActivity('FAST_MOVES', {
+        ratio: suspiciousRatio,
+        averageTime: this.playerStats.averageMoveTime
+      });
+    }
+  }
+
+  analyzeMove(move, position, moveTime) {
+    if (this.engineMoves.has(move)) {
+      this.playerStats.engineMoves++;
+    }
+    
+    const engineMoveRatio = this.playerStats.engineMoves / this.playerStats.moveTimes.length;
+    
+    if (engineMoveRatio > this.suspiciousThresholds.engineMoveRatio) {
+      this.flagSuspiciousActivity('ENGINE_MOVES', {
+        ratio: engineMoveRatio,
+        totalMoves: this.playerStats.moveTimes.length
+      });
+    }
+    
+    this.analyzeMoveTime(moveTime);
+    this.analyzeConsistency();
+  }
+
+  analyzeConsistency() {
+    if (this.playerStats.moveTimes.length < 5) return;
+    
+    const times = this.playerStats.moveTimes.slice(-10);
+    const variance = this.calculateVariance(times);
+    const consistency = 1 - (variance / Math.pow(this.playerStats.averageMoveTime, 2));
+    
+    this.playerStats.consistencyScore = consistency;
+    
+    if (consistency > this.suspiciousThresholds.consistency) {
+      this.flagSuspiciousActivity('MACHINE_LIKE_CONSISTENCY', {
+        consistency: consistency,
+        variance: variance
+      });
+    }
+  }
+
+  calculateVariance(times) {
+    const mean = times.reduce((sum, time) => sum + time, 0) / times.length;
+    const squaredDiffs = times.map(time => Math.pow(time - mean, 2));
+    return squaredDiffs.reduce((sum, diff) => sum + diff, 0) / times.length;
+  }
+
+  flagSuspiciousActivity(type, data) {
+    const suspiciousPattern = {
+      type: type,
+      timestamp: Date.now(),
+      data: data,
+      severity: this.calculateSeverity(type, data)
+    };
+    
+    this.suspiciousPatterns.push(suspiciousPattern);
+    
+    console.warn('Suspicious activity detected:', suspiciousPattern);
+    
+    if (socket) {
+      socket.emit('suspiciousActivity', {
+        type: type,
+        data: data,
+        playerStats: this.playerStats
+      });
+    }
+    
+    return suspiciousPattern;
+  }
+
+  calculateSeverity(type, data) {
+    switch (type) {
+      case 'FAST_MOVES':
+        return data.ratio > 0.5 ? 'HIGH' : data.ratio > 0.3 ? 'MEDIUM' : 'LOW';
+      case 'ENGINE_MOVES':
+        return data.ratio > 0.8 ? 'HIGH' : data.ratio > 0.7 ? 'MEDIUM' : 'LOW';
+      case 'MACHINE_LIKE_CONSISTENCY':
+        return data.consistency > 0.9 ? 'HIGH' : data.consistency > 0.8 ? 'MEDIUM' : 'LOW';
+      default:
+        return 'LOW';
+    }
+  }
+
+  getRiskScore() {
+    if (this.suspiciousPatterns.length === 0) return 0;
+    
+    const highSeverity = this.suspiciousPatterns.filter(p => p.severity === 'HIGH').length;
+    const mediumSeverity = this.suspiciousPatterns.filter(p => p.severity === 'MEDIUM').length;
+    const lowSeverity = this.suspiciousPatterns.filter(p => p.severity === 'LOW').length;
+    
+    return (highSeverity * 3 + mediumSeverity * 2 + lowSeverity * 1) / this.suspiciousPatterns.length;
+  }
+
+  reset() {
+    this.suspiciousPatterns = [];
+    this.playerStats = {
+      moveTimes: [],
+      accuracy: [],
+      engineMoves: 0,
+      suspiciousMoves: 0,
+      averageMoveTime: 0,
+      consistencyScore: 0
+    };
+  }
+
+  getReport() {
+    return {
+      riskScore: this.getRiskScore(),
+      suspiciousPatterns: this.suspiciousPatterns,
+      playerStats: this.playerStats,
+      recommendations: this.getRecommendations()
+    };
+  }
+
+  getRecommendations() {
+    const recommendations = [];
+    
+    if (this.playerStats.engineMoves / Math.max(this.playerStats.moveTimes.length, 1) > 0.7) {
+      recommendations.push('High ratio of engine-like moves detected');
+    }
+    
+    if (this.playerStats.consistencyScore > 0.8) {
+      recommendations.push('Unusually consistent move timing detected');
+    }
+    
+    const fastMovesRatio = this.playerStats.moveTimes.filter(t => t < 2000).length / 
+                          Math.max(this.playerStats.moveTimes.length, 1);
+    if (fastMovesRatio > 0.3) {
+      recommendations.push('High frequency of very fast moves detected');
+    }
+    
+    return recommendations;
+  }
+}
+
+// Initialize anti-cheat system
+const antiCheat = new AntiCheatSystem();
+let moveStartTime = null;
+
 function onDragStart(source, piece, position, orientation) {
-  if (!game || game.game_over()) return false;
-  if ((myColor === 'white' && piece.search(/^b/) !== -1) ||
-      (myColor === 'black' && piece.search(/^w/) !== -1)) {
+  if (game.game_over() || 
+      (game.turn() === 'w' && piece.search(/^b/) !== -1) ||
+      (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
     return false;
   }
-  // Só pode mover se for seu turno
-  if ((myColor === 'white' && game.turn() !== 'w') ||
-      (myColor === 'black' && game.turn() !== 'b')) {
-    return false;
-  }
+  
+  // Start timing the move
+  moveStartTime = Date.now();
+  
+  // Highlight possible moves
+  const moves = game.moves({ square: source });
+  moves.forEach(move => {
+    const target = move.slice(-2);
+    animateMoveHighlight(target);
+  });
 }
 
 // Animação ao mover peça: highlight animado
@@ -360,13 +596,23 @@ function animateMoveHighlight(square) {
 
 // Modificar onDrop para animar highlight
 function onDrop(source, target) {
-  if (!game) return 'snapback';
-  const move = game.move({ from: source, to: target, promotion: 'q' });
+  const move = game.move({
+    from: source,
+    to: target,
+    promotion: 'q'
+  });
+
   if (move === null) return 'snapback';
-  socket.emit('move', { roomId, from: source, to: target, promotion: 'q' });
-  updateStatus();
-  animateMoveHighlight(target); // animação ao mover
+
+  // Calculate move time and analyze
+  if (moveStartTime) {
+    const moveTime = Date.now() - moveStartTime;
+    antiCheat.analyzeMove(move.san, game.fen(), moveTime);
+    moveStartTime = null;
+  }
+
   playMoveSound();
+  updateStatus();
 }
 
 function onSnapEnd() {
@@ -700,9 +946,9 @@ function detectBrowserLanguage() {
   return 'pt';
 }
 
+// Remover a janela de seleção de idioma e implementar detecção automática
 window.addEventListener('DOMContentLoaded', () => {
   const langModal = document.getElementById('language-modal');
-  const flagBtns = document.querySelectorAll('.lang-flag-btn');
   let chosenLang = localStorage.getItem('privatechess_lang');
   
   if (!chosenLang) {
@@ -713,16 +959,23 @@ window.addEventListener('DOMContentLoaded', () => {
   
   // Load the language
   loadLang(chosenLang);
-  langModal.style.display = 'none';
+  
+  // Hide language modal immediately - no user interaction needed
+  if (langModal) {
+    langModal.style.display = 'none';
+  }
   document.body.style.overflow = '';
   
-  // Set up language selection buttons
+  // Remove language selection buttons since we're auto-detecting
+  const flagBtns = document.querySelectorAll('.lang-flag-btn');
   flagBtns.forEach(btn => {
     btn.onclick = () => {
       const lang = btn.getAttribute('data-lang');
       localStorage.setItem('privatechess_lang', lang);
       loadLang(lang);
-      langModal.style.display = 'none';
+      if (langModal) {
+        langModal.style.display = 'none';
+      }
       document.body.style.overflow = '';
       
       // Update URL with language parameter

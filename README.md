@@ -8,12 +8,16 @@
 ![Docker](https://img.shields.io/badge/Docker-ready-blue?logo=docker)
 ![PWA](https://img.shields.io/badge/PWA-ready-blueviolet?logo=pwa)
 ![Languages: PT|EN|RU](https://img.shields.io/badge/languages-PT%20%7C%20EN%20%7C%20RU-yellow)
+![Anti-Cheat](https://img.shields.io/badge/Anti--Cheat-Active-red?logo=shield)
+![SEO](https://img.shields.io/badge/SEO-Optimized-green?logo=search)
 
 **Live demo:** [https://privatechess.org](https://privatechess.org)
 
-Private CHESS is a secure, anonymous, and privacy-focused online chess game for two players. It features automatic color pairing, private rooms, anonymous chat, move timer, game history, statistics, and a modern web interface. The project is mobile-first, PWA-ready, and supports multilingual UI (Portuguese, English, Russian).
+Private CHESS is a secure, anonymous, and privacy-focused online chess game for two players. It features automatic color pairing, private rooms, anonymous chat, move timer, game history, statistics, and a modern web interface. The project is mobile-first, PWA-ready, supports multilingual UI (Portuguese, English, Russian), and includes advanced anti-cheat detection.
 
 ## Features
+
+### Core Game Features
 - Anonymous, secure, and private chess matches
 - Automatic color pairing
 - Private rooms with code
@@ -25,8 +29,36 @@ Private CHESS is a secure, anonymous, and privacy-focused online chess game for 
 - No game data or snapshots are stored on the server
 - Responsive (mobile-first)
 - PWA (installable on mobile/desktop)
-- Multilingual interface: Portuguese, English, Russian
-- Privacy notice banner
+
+### Multilingual Support
+- **Automatic language detection** based on browser settings
+- **Portuguese, English, Russian** with seamless switching
+- **Complete interface translation** including anti-cheat messages
+- **SEO optimized** for all supported languages
+- **No language selection modal** - instant loading
+
+### Anti-Cheat & Fair Play System
+- **Real-time engine detection** - Analyzes moves commonly played by chess engines
+- **Move timing analysis** - Detects suspiciously fast moves and machine-like consistency
+- **Pattern recognition** - Identifies repetitive and artificial move patterns
+- **Severity classification** - LOW, MEDIUM, HIGH severity levels for violations
+- **Visual notifications** - Color-coded warnings for different violation types
+- **Server-side tracking** - Comprehensive logging and analysis
+- **Automatic reset** - Anti-cheat system resets for each new game
+
+### Privacy & Security
+- **Zero data collection** - No user data stored on server
+- **Anonymous gameplay** - No registration required
+- **Private rooms** - Secure code-based room system
+- **Encrypted communication** - All data transmitted securely
+- **Privacy-first design** - Built with privacy as core principle
+
+### Technical Features
+- **Real-time communication** via Socket.IO
+- **Automatic reconnection** to games after page reload
+- **Cross-browser compatibility** - Works on all modern browsers
+- **Mobile optimization** - Touch-friendly interface
+- **Performance optimized** - Fast loading and smooth gameplay
 
 ## How to Use
 
@@ -58,6 +90,27 @@ Private CHESS is a secure, anonymous, and privacy-focused online chess game for 
 3. Access in your browser: [http://127.0.0.1:8743](http://127.0.0.1:8743)
 
 > **Note:** Docker Compose is **not required** for this project, since it consists of a single service. Use Compose only if you plan to add more services in the future.
+
+## Anti-Cheat System
+
+The Private CHESS anti-cheat system monitors gameplay in real-time to ensure fair play:
+
+### Detection Methods
+- **Engine Move Analysis**: Identifies moves commonly played by chess engines
+- **Timing Analysis**: Detects suspiciously fast moves and artificial consistency
+- **Pattern Recognition**: Analyzes move sequences for machine-like behavior
+- **Statistical Analysis**: Calculates risk scores based on multiple factors
+
+### User Experience
+- **Non-intrusive**: Runs in background without affecting gameplay
+- **Visual warnings**: Color-coded notifications for different violation levels
+- **Multilingual alerts**: Anti-cheat messages in Portuguese, English, and Russian
+- **Automatic reset**: System resets for each new game
+
+### Fair Play
+- **Transparent**: Users are notified of suspicious activity
+- **Educational**: Helps maintain a fair gaming environment
+- **Balanced**: Designed to catch cheaters without false positives
 
 ## Tips & Production Deployment
 
@@ -98,13 +151,35 @@ Private CHESS is a secure, anonymous, and privacy-focused online chess game for 
 ## Project Structure
 - `server.js`: Node.js backend with Express and Socket.IO
 - `public/`: Frontend static files (HTML, JS, CSS, chess assets)
-- `public/lang_*.json`: Translation files
+- `public/lang_*.json`: Translation files for Portuguese, English, Russian
+- `public/anti-cheat.js`: Anti-cheat detection system
+- `public/seo-multilang.js`: SEO optimization for multiple languages
+
+## Recent Updates (2025)
+
+### v1.2 - Anti-Cheat System
+- Implemented comprehensive anti-cheat detection
+- Added real-time move analysis and pattern recognition
+- Integrated fair play monitoring with visual notifications
+- Added multilingual anti-cheat messages
+
+### v1.1 - UX Optimization
+- Automatic language detection eliminating selection modal
+- Fixed socket connection issues
+- Improved footer management during gameplay
+- Enhanced SEO implementation with structured data
+
+### v1.0 - Core Features
+- Complete multilingual support with automatic detection
+- Private room system with secure codes
+- Anonymous chat with random names
+- Responsive design and PWA capabilities
 
 ## Credits
 - Chess logic: [chess.js](https://github.com/jhlywa/chess.js)
 - Board UI: [chessboard.js](https://github.com/oakmac/chessboardjs)
 - SVG pieces: Wikimedia Commons
-- Developed by Pablo Murad
+- Developed by [Pablo Murad](https://pablo.space)
 
 ## License
-MIT License 
+MIT License - See [LICENSE.md](LICENSE.md) for details 
