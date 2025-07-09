@@ -124,6 +124,24 @@ socket.on('roomCreated', ({ code }) => {
   createRoomBtn.disabled = true;
   joinRoomBtn.disabled = true;
   startBtn.disabled = true;
+
+  // Exibir link de convite
+  const inviteLinkDisplay = document.getElementById('inviteLinkDisplay');
+  if (inviteLinkDisplay) {
+    const url = `${window.location.origin}${window.location.pathname}?room=${code}`;
+    inviteLinkDisplay.innerHTML = `<span>Link de convite: <a href='${url}' target='_blank'>${url}</a> <button id='copyInviteBtn' style='font-size:0.95em;margin-left:6px;'>Copiar</button></span>`;
+    inviteLinkDisplay.style.display = '';
+    setTimeout(() => {
+      const btn = document.getElementById('copyInviteBtn');
+      if (btn) {
+        btn.onclick = () => {
+          navigator.clipboard.writeText(url);
+          btn.textContent = 'Copiado!';
+          setTimeout(() => { btn.textContent = 'Copiar'; }, 1200);
+        };
+      }
+    }, 100);
+  }
 });
 
 joinRoomBtn.onclick = () => {
@@ -1054,3 +1072,13 @@ style.innerHTML = `
   }
 `;
 document.head.appendChild(style);
+
+// Ao carregar a página, se houver ?room=CODE, preencher e tentar entrar
+window.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  const roomParam = params.get('room');
+  if (roomParam && roomParam.length === 6) {
+    roomCodeInput.value = roomParam.toUpperCase();
+    joinRoomBtn.click();
+  }
+});
