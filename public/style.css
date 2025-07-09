@@ -266,13 +266,18 @@ footer {
   line-height: 1.4;
 }
 
-.footer-bottom {
-  border-top: 1px solid rgba(255,255,255,0.2);
-  padding: 12px 0;
-  text-align: center;
-  font-size: 0.9em;
-  background: rgba(0,0,0,0.1);
+.footer-section a {
+  color: var(--text-light);
+  text-decoration: none;
+  transition: color var(--transition);
 }
+
+.footer-section a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+
 .game-board-container {
   /* min-width: 220px; Removido, o min-width será tratado pelo tabuleiro */
   max-width: 600px; /* Ajustado para o max-width do tabuleiro */

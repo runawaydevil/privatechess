@@ -653,7 +653,8 @@ function applyTranslations() {
   el = document.querySelector('#chat h3'); if (el) el.textContent = t('chat');
   el = document.querySelector('#chat-form button'); if (el) el.textContent = t('send');
   // Removido: opções do seletor de idioma
-  el = document.getElementById('footer-text'); if (el) el.textContent = t('footer', { year: new Date().getFullYear() });
+  el = document.getElementById('copyright-text'); if (el) el.innerHTML = t('copyright', { year: new Date().getFullYear() });
+
 }
 
 function loadLang(lang) {

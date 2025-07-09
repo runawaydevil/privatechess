@@ -115,10 +115,10 @@
       </div>
       <h2 id="manifesto-title" style="text-align:center;margin-bottom:24px;"></h2>
       <pre id="manifesto-text" style="white-space:pre-wrap;font-size:1.1em;line-height:1.6;text-align:center;background:none;border:none;"></pre>
-      <footer id="manifesto-signature" style="text-align:center;margin-top:24px;display:none;">
+      <div id="manifesto-signature" style="text-align:center;margin-top:24px;display:none;">
         <img src="sig.png" alt="Assinatura" style="height:48px;display:block;margin:0 auto 8px auto;">
         <span id="manifesto-author" style="font-size:1.1em;font-weight:bold;">Pablo Murad</span>
-      </footer>
+      </div>
     </article>
 
     <section class="hero-section">
@@ -239,17 +239,12 @@
       </div>
       <div class="footer-section">
         <h4>Desenvolvedor</h4>
-        <p>Desenvolvido por <strong>Pablo Murad</strong></p>
-        <p>© 2025 Private CHESS. Todos os direitos reservados.</p>
+        <p>Desenvolvido por <strong><a href="https://pablo.space" target="_blank" rel="noopener noreferrer">Pablo Murad</a></strong></p>
+        <p id="copyright-text">© <span id="current-year">2025</span> Private CHESS. Todos os direitos reservados.</p>
       </div>
     </div>
-    <div class="footer-bottom">
-      <span id="footer-text">Desenvolvido por Pablo Murad - 2025</span>
-    </div>
   </footer>
-  <script>
-    document.getElementById('ano-atual').textContent = new Date().getFullYear();
-  </script>
+
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script src="seo-multilang.js"></script>
 </body>

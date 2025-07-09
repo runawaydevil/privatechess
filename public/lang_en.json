@@ -33,11 +33,12 @@
   "checkmate": "Checkmate! {winner} win.",
   "turn": "{color}'s turn",
   "check": " (check!)",
-  "footer": "Developed by Pablo Murad - {year}",
+
   "language": "Language",
   "portuguese": "Portuguese",
   "english": "English",
   "russian": "Russian",
   "manifesto_title": "Private Chess Manifesto",
-  "manifesto_text": "In a world increasingly connected, where every click is tracked and every digital step is monitored, we chose a different path.\n\nPrivate Chess was born from the desire to promote chess as a space for culture, learning, and freedom — free from tracking, logins, and exposure.\n\nWe believe chess is a universal language. It crosses borders, genders, beliefs, and ideologies. But to keep that language pure, the environment in which it's played must respect its players.\n\nThat's why:\n\nWe don't require logins.\n\nWe don't store your data.\n\nThere are no profiles, followers, or visible rankings.\n\nHere, the only thing that matters is the game.\n\nAt Private Chess, you can challenge the world or just train in silence — always knowing your privacy is protected.\n\nPlay. Reflect. Grow.\nNo exposure. No surveillance.\nJust chess.\n\nPrivateChess.org\n— Pablo Murad"
+  "manifesto_text": "In a world increasingly connected, where every click is tracked and every digital step is monitored, we chose a different path.\n\nPrivate Chess was born from the desire to promote chess as a space for culture, learning, and freedom — free from tracking, logins, and exposure.\n\nWe believe chess is a universal language. It crosses borders, genders, beliefs, and ideologies. But to keep that language pure, the environment in which it's played must respect its players.\n\nThat's why:\n\nWe don't require logins.\n\nWe don't store your data.\n\nThere are no profiles, followers, or visible rankings.\n\nHere, the only thing that matters is the game.\n\nAt Private Chess, you can challenge the world or just train in silence — always knowing your privacy is protected.\n\nPlay. Reflect. Grow.\nNo exposure. No surveillance.\nJust chess.\n\nPrivateChess.org\n— Pablo Murad",
+  "copyright": "© {year} Private CHESS. All rights reserved."
 } 
