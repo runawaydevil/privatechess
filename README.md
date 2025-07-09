@@ -189,7 +189,7 @@ I'm always happy to help with:
 - Bug reports
 - General questions about the project
 - Collaboration opportunities
-
+.
 ## Credits
 - Chess logic: [chess.js](https://github.com/jhlywa/chess.js)
 - Board UI: [chessboard.js](https://github.com/oakmac/chessboardjs)
