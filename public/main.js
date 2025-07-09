@@ -108,8 +108,7 @@ createRoomBtn.onclick = () => {
   console.log('Botão Criar Sala Privada clicado');
   socket.emit('createRoom');
   // Não desabilitar botões ainda
-  statusDiv.textContent = t('waiting_for_opponent');
-  
+  statusDiv.textContent = t('waiting_for_opponent') || 'Aguardando outro jogador se conectar...';
   // Ocultar footer quando aguardando jogo
   const footer = document.querySelector('footer');
   if (footer) footer.style.display = 'none';
@@ -118,8 +117,7 @@ createRoomBtn.onclick = () => {
 // Recebe o código da sala criada
 socket.on('roomCreated', ({ code }) => {
   console.log('Código da sala recebido:', code);
-  roomCodeDisplay.style.display = '';
-  roomCodeDisplay.textContent = t('room_code', { code: code });
+  roomCodeDisplay.style.display = 'none'; // Esconde o texto room_code
   roomCodeInput.value = code;
   createRoomBtn.disabled = true;
   joinRoomBtn.disabled = true;
@@ -1005,7 +1003,7 @@ function detectBrowserLanguage() {
 
 // Remover a janela de seleção de idioma e implementar detecção automática
 window.addEventListener('DOMContentLoaded', () => {
-  const langModal = document.getElementById('language-modal');
+  // const langModal = document.getElementById('language-modal'); // Removido
   let chosenLang = localStorage.getItem('privatechess_lang');
   
   if (!chosenLang) {
@@ -1017,30 +1015,10 @@ window.addEventListener('DOMContentLoaded', () => {
   // Load the language
   loadLang(chosenLang);
   
-  // Hide language modal immediately - no user interaction needed
-  if (langModal) {
-    langModal.style.display = 'none';
-  }
+  // Não há mais modal para esconder
   document.body.style.overflow = '';
   
-  // Remove language selection buttons since we're auto-detecting
-  const flagBtns = document.querySelectorAll('.lang-flag-btn');
-  flagBtns.forEach(btn => {
-    btn.onclick = () => {
-      const lang = btn.getAttribute('data-lang');
-      localStorage.setItem('privatechess_lang', lang);
-      loadLang(lang);
-      if (langModal) {
-        langModal.style.display = 'none';
-      }
-      document.body.style.overflow = '';
-      
-      // Update URL with language parameter
-      const url = new URL(window.location);
-      url.searchParams.set('lang', lang);
-      window.history.replaceState({}, '', url);
-    };
-  });
+  // Não há mais botões de bandeira para manipular
 });
 
 // Atualizar manifesto ao trocar idioma
