@@ -596,6 +596,13 @@ function animateMoveHighlight(square) {
 
 // Modificar onDrop para animar highlight
 function onDrop(source, target) {
+  // Só permite mover se for a vez do jogador
+  const turn = game.turn();
+  if ((turn === 'w' && myColor !== 'white') || (turn === 'b' && myColor !== 'black')) {
+    return 'snapback';
+  }
+
+  // Tenta o movimento localmente só para validar
   const move = game.move({
     from: source,
     to: target,
@@ -604,15 +611,25 @@ function onDrop(source, target) {
 
   if (move === null) return 'snapback';
 
-  // Calculate move time and analyze
+  // Desfaz o movimento local (será feito pelo servidor)
+  game.undo();
+
+  // Envia para o backend
+  socket.emit('move', {
+    roomId,
+    from: source,
+    to: target,
+    promotion: 'q'
+  });
+
+  // Analisa tempo e anti-cheat
   if (moveStartTime) {
     const moveTime = Date.now() - moveStartTime;
     antiCheat.analyzeMove(move.san, game.fen(), moveTime);
     moveStartTime = null;
   }
 
-  playMoveSound();
-  updateStatus();
+  // Não atualiza o tabuleiro aqui, só quando receber do servidor
 }
 
 function onSnapEnd() {
@@ -633,6 +650,28 @@ function updateStatus() {
   statusDiv.textContent = status;
   statusDiv.classList.add('animate__animated', 'animate__fadeIn');
   setTimeout(() => statusDiv.classList.remove('animate__animated', 'animate__fadeIn'), 700);
+
+  // Bloquear/desbloquear tabuleiro conforme a vez
+  if (board) {
+    const turn = game.turn();
+    const isMyTurn = (turn === 'w' && myColor === 'white') || (turn === 'b' && myColor === 'black');
+    board.draggable = isMyTurn;
+    // Para chessboard.js, precisamos destruir e recriar o tabuleiro para mudar o draggable
+    if (typeof board.destroy === 'function') {
+      const fen = game.fen();
+      board.destroy();
+      board = Chessboard('chessboard', {
+        draggable: isMyTurn,
+        position: fen,
+        orientation: myColor,
+        onDragStart: onDragStart,
+        onDrop: onDrop,
+        onSnapEnd: onSnapEnd,
+        pieceTheme: 'img/chesspieces/wikipedia/{piece}.svg',
+        width: Math.min(window.innerWidth, window.innerHeight) * 0.9
+      });
+    }
+  }
 }
 
 function formatTime(seconds) {
