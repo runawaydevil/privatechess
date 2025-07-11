@@ -20,7 +20,7 @@ body {
   font-family: 'Nunito', 'Inter', Arial, sans-serif;
   text-align: center;
   margin: 0;
-  padding-bottom: 40px;
+  padding-bottom: 200px; /* Aumentado para dar espaço ao footer */
   min-height: 100vh;
   transition: background var(--transition);
 }
@@ -225,16 +225,18 @@ footer {
   z-index: 100;
   box-shadow: 0 -2px 8px #0002;
   transition: background var(--transition);
+  max-height: 160px; /* Reduzido altura máxima */
+  overflow-y: auto; /* Permitir scroll se necessário */
 }
 
 .footer-content {
   display: flex;
   justify-content: space-around;
   align-items: flex-start;
-  padding: 20px 16px 16px 16px;
+  padding: 14px 16px 10px 16px; /* Reduzido padding ainda mais */
   max-width: 1200px;
   margin: 0 auto;
-  gap: 32px;
+  gap: 24px; /* Reduzido gap */
 }
 
 .footer-section {
@@ -243,27 +245,27 @@ footer {
 }
 
 .footer-section h4 {
-  margin: 0 0 12px 0;
-  font-size: 1.1em;
+  margin: 0 0 8px 0; /* Reduzido margin */
+  font-size: 1em; /* Reduzido tamanho da fonte */
   color: var(--text-light);
 }
 
 .footer-section p {
-  margin: 8px 0;
-  font-size: 0.9em;
-  line-height: 1.4;
+  margin: 6px 0; /* Reduzido margin */
+  font-size: 0.85em; /* Reduzido tamanho da fonte */
+  line-height: 1.3; /* Reduzido line-height */
 }
 
 .footer-section ul {
   list-style: none;
   padding: 0;
-  margin: 8px 0;
+  margin: 6px 0; /* Reduzido margin */
 }
 
 .footer-section li {
-  margin: 4px 0;
-  font-size: 0.9em;
-  line-height: 1.4;
+  margin: 3px 0; /* Reduzido margin */
+  font-size: 0.85em; /* Reduzido tamanho da fonte */
+  line-height: 1.3; /* Reduzido line-height */
 }
 
 .footer-section a {
@@ -348,31 +350,37 @@ select {
   #timers { font-size: 1em; }
   #history, #stats, #chat { max-width: 98vw; min-width: unset; }
   #chat-messages { height: 80px; font-size: 0.95em; }
-  body { padding-bottom: 200px; }
+  body { padding-bottom: 250px; /* Aumentado para telas menores */ }
   .footer-content { 
     flex-direction: column; 
-    gap: 20px; 
-    padding: 16px; 
+    gap: 16px; /* Reduzido gap */
+    padding: 12px; /* Reduzido padding */
   }
   .footer-section { 
     min-width: unset; 
     text-align: center; 
+  }
+  footer {
+    max-height: 180px; /* Reduzido para telas menores */
   }
 }
 
 /* Para telas muito pequenas */
 @media (max-width: 480px) {
   #game-area { margin-bottom: 40px; }
-  body { padding-bottom: 250px; }
+  body { padding-bottom: 280px; /* Aumentado para telas muito pequenas */ }
   .footer-content { 
-    padding: 12px; 
-    gap: 16px; 
+    padding: 10px; /* Reduzido ainda mais */
+    gap: 12px; /* Reduzido gap */
   }
   .footer-section h4 { 
-    font-size: 1em; 
+    font-size: 0.95em; /* Reduzido tamanho da fonte */
   }
   .footer-section p, .footer-section li { 
-    font-size: 0.85em; 
+    font-size: 0.8em; /* Reduzido tamanho da fonte */
+  }
+  footer {
+    max-height: 200px; /* Reduzido para telas muito pequenas */
   }
 }
 

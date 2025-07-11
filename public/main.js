@@ -1039,7 +1039,8 @@ loadLang = function(lang) {
 // Garante que body e html ocupem 100% e não tenham overflow
 const style = document.createElement('style');
 style.innerHTML = `
-  html, body { height: 100%; margin: 0; padding: 0; overflow-x: hidden; }
+  html, body { height: 100%; margin: 0; overflow-x: hidden; }
+  body { padding-bottom: 200px; } /* Manter espaço para o footer */
   #game-area { flex-wrap: wrap; }
   @media (max-width: 700px) {
     #game-area { flex-direction: column; align-items: center; gap: 0; }
@@ -1047,6 +1048,10 @@ style.innerHTML = `
     #timers { font-size: 1em; }
     #history, #stats, #chat { max-width: 98vw; min-width: unset; }
     #chat-messages { height: 80px; font-size: 0.95em; }
+    body { padding-bottom: 250px; } /* Mais espaço em telas menores */
+  }
+  @media (max-width: 480px) {
+    body { padding-bottom: 280px; } /* Ainda mais espaço em telas muito pequenas */
   }
 `;
 document.head.appendChild(style);
